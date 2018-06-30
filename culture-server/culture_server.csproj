@@ -49,6 +49,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
@@ -146,7 +147,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -165,7 +165,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -290,6 +290,28 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{36a13078-f7e3-45a7-b022-791668fe24d1}</Project>
+      <Name>BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonTool\CommonTool.csproj">
+      <Project>{76295f87-55f6-4c95-bc99-ecd05546da7d}</Project>
+      <Name>CommonTool</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ConfigHelper\ConfigHelper.csproj">
+      <Project>{a22045a0-3284-48ee-950f-8beca7920c25}</Project>
+      <Name>ConfigHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DBHelper\DBHelper.csproj">
+      <Project>{47a08a63-1bc9-4722-8410-75e877962d17}</Project>
+      <Name>DBHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\External\External.csproj">
+      <Project>{c090074e-c01b-4f14-874a-8d70017e1148}</Project>
+      <Name>External</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
