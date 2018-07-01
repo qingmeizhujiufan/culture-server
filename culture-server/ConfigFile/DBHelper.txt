@@ -1,0 +1,6 @@
+﻿<root>
+  <connectionStrings>
+    <add isCurrentUse="true" dbType="1" name="SqlServer" value="Data Source=(local);Initial Catalog=CultureDB;Integrated Security=True"></add>
+    <add isCurrentUse="false" dbType="1" name="SqlServer" value="Data Source=(local);Initial Catalog=test;Integrated Security=True"></add>
+  </connectionStrings>
+</root>

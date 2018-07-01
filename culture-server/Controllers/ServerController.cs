@@ -114,7 +114,7 @@ namespace culture_server.Controllers
             try
             {
                 //清空数据库该用户票据数据  
-                string str_clear = @"delete dbo.ls_token where userId='{0}'";
+                string str_clear = @"delete dbo.c_token where userId='{0}'";
                 str_clear = string.Format(str_clear, userId);
                 flag = DBHelper.SqlHelper.ExecuteSql(str_clear);
             }
