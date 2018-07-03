@@ -115,7 +115,7 @@ namespace BLL
                     str = @"update dbo.c_news set 
                                 state=1
                                 where id='{0}'";
-                    str = string.Format(str, d.id, d.newsTitle, d.newsCover, d.newsBrief, d.newsContent);
+                    str = string.Format(str, d.id);
                     int flag = DBHelper.SqlHelper.ExecuteSql(str);
                     if (flag > 0) return 1;
                     else return 2;
