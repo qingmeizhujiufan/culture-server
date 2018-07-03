@@ -24,7 +24,8 @@ namespace culture_server.Controllers
                 img.fileName = file.FileName;
                 img.fileType = file.ContentType;
                 img.fileSize = file.ContentLength;
-                img.filePath = "/UpLoadFile/" + id + "." + file.ContentType.Split(new char[1]{'/'})[1];
+                String[] arr = file.FileName.Split(new char[1] { '.' });
+                img.filePath = "/UpLoadFile/" + id + "." + arr[arr.Length - 1];
 
                 string path = Server.MapPath(img.filePath);
                 file.SaveAs(path);
