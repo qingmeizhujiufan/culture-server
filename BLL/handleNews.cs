@@ -91,6 +91,16 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
+        //删除新闻
+        public bool delete(string id)
+        {
+            string str = @"delete dbo.c_news where id='{0}'";
+            str = string.Format(str, id);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
         //审核新闻   return   0: 未找到新闻； 1: 审核成功； 2: 审核失败; -1: 不允许审核;
         public int review(dynamic d)
         {

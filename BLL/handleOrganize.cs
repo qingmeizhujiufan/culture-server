@@ -24,5 +24,43 @@ namespace BLL
 
             return dt;
         }
+
+        //保存管理员信息
+        public bool saveAP(dynamic d)
+        {
+            string str = string.Empty;
+            int flag = 0;
+            string id = d.id;
+            if (string.IsNullOrEmpty(id))
+            {
+                str = @"insert into dbo.c_admin (pId, userName, userPwd, type, typeName)
+                                values ('{0}', '{1}', '{2}', 1, '{3}')";
+                str = string.Format(str, d.pId, d.userName, d.userPwd, d.typeName);
+            }
+            else
+            {
+                str = @"update dbo.c_admin set 
+                                newsTitle='{1}', 
+                                newsCover='{2}', 
+                                newsBrief='{3}', 
+                                newsContent='{4}'
+                                where id='{0}'";
+                str = string.Format(str, d.id, d.newsTitle, d.newsCover, d.newsBrief, d.newsContent);
+            }
+
+            flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
+        //删除管理员
+        public bool delete(string id)
+        {
+            string str = @"delete dbo.c_admin where id='{0}'";
+            str = string.Format(str, id);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
     }
 }

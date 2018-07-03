@@ -148,6 +148,61 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 删除新闻
+        /// <summary>  
+        /// 删除新闻
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage delete(dynamic d)
+        {
+            string id = d.id;
+            object data = new object();
+            try
+            {
+                BLL.handleNews news = new BLL.handleNews();
+                bool flag = false;
+
+                flag = news.delete(id);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "删除新闻信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 审核新闻
         /// <summary>  
         /// 审核新闻 
