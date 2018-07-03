@@ -15,7 +15,7 @@ namespace BLL
                                     adCover,
                                     adLink,
                                     state,
-                                    CONVERT(varchar(19), n.create_time, 120) as create_time
+                                    CONVERT(varchar(19), create_time, 120) as create_time
                                 from dbo.c_ad ";
             str = string.Format(str);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
