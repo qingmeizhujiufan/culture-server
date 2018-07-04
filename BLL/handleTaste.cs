@@ -11,24 +11,24 @@ namespace BLL
         //获取兴趣圈图片列表
         public DataTable queryList()
         {
-            string str = @"select   n.id,
-                                    newsType,
-                                    newsTitle,
-                                    newsCover,
-                                    newsAuthor,
-                                    newsBrief,
-                                    newsContent,
-                                    state,
-                                    updator,
-                                    updatorName,
-                                    CONVERT(varchar(19), n.update_time, 120) as update_time,
-                                    creator,
-                                    a.userName as creatorName,
-                                    a.typeName,
-                                    CONVERT(varchar(19), n.create_time, 120) as create_time
-                                from dbo.c_news n
-                                left join dbo.c_admin a
-                                on n.creator = a.id";
+            string str = @"select  a.id,
+	                               a.tasteCover,
+	                               a.tasteBrief,
+	                               (select COUNT(id)
+			                            from dbo.c_taste_like b
+			                            where a.id = b.tasteId	
+	                               ) as likeNum,	  
+	                               (select COUNT(id)
+			                            from dbo.c_taste_comment c
+			                            where a.id = c.tasteId	
+	                               ) as commentNum,
+	                               a.state,
+	                               a.updator,
+	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
+	                               a.creator,
+	                               CONVERT(varchar(19), a.create_time, 120) as create_time
+                            from dbo.c_taste a
+                            order by a.create_time desc";
             str = string.Format(str);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
@@ -38,25 +38,24 @@ namespace BLL
         //获取兴趣圈图片详情
         public DataTable queryDetail(string id)
         {
-            string str = @"select   n.id,
-                                    newsType,
-                                    newsTitle,
-                                    newsCover,
-                                    newsAuthor,
-                                    newsBrief,
-                                    newsContent,
-                                    state,
-                                    updator,
-                                    updatorName,
-                                    CONVERT(varchar(19), n.update_time, 120) as update_time,
-                                    creator,
-                                    a.userName as creatorName,
-                                    a.typeName,
-                                    CONVERT(varchar(19), n.create_time, 120) as create_time
-                                from dbo.c_news n
-                                left join dbo.c_admin a
-                                on n.creator = a.id
-                                where n.id='{0}'";
+            string str = @"select  a.id,
+	                               a.tasteCover,
+	                               a.tasteBrief,
+	                               (select COUNT(id)
+			                            from dbo.c_taste_like b
+			                            where a.id = b.tasteId	
+	                               ) as likeNum,	  
+	                               (select COUNT(id)
+			                            from dbo.c_taste_comment c
+			                            where a.id = c.tasteId	
+	                               ) as commentNum,
+	                               a.state,
+	                               a.updator,
+	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
+	                               a.creator,
+	                               CONVERT(varchar(19), a.create_time, 120) as create_time
+                            from dbo.c_taste a
+                            where a.id='{0}'";
             str = string.Format(str, id);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
