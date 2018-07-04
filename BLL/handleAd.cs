@@ -13,6 +13,7 @@ namespace BLL
         {
             string str = @"select   id,
                                     adCover,
+                                    adTitle,
                                     adLink,
                                     state,
                                     CONVERT(varchar(19), create_time, 120) as create_time
@@ -28,6 +29,7 @@ namespace BLL
         {
             string str = @"select   id,
                                     adCover,
+                                    adTitle,
                                     adLink,
                                     state,
                                     CONVERT(varchar(19), n.create_time, 120) as create_time
@@ -47,17 +49,18 @@ namespace BLL
             string id = d.id;
             if (string.IsNullOrEmpty(id))
             {
-                str = @"insert into dbo.c_ad (adCover, adLink, state)
-                                values ('{0}', '{1}', 0)";
-                str = string.Format(str, d.adCover, d.adLink);
+                str = @"insert into dbo.c_ad (adCover, adTitle, adLink, state)
+                                values ('{0}', '{1}', '{2}', 0)";
+                str = string.Format(str, d.adCover, d.adTitle, d.adLink);
             }
             else
             {
                 str = @"update dbo.c_ad set 
-                                adCover='{1}', 
-                                adLink='{2}'
+                                adCover='{1}',
+                                adTitle='{2}', 
+                                adLink='{3}'
                                 where id='{0}'";
-                str = string.Format(str, d.id, d.adCover, d.adLink);
+                str = string.Format(str, d.id, d.adCover, d.adTitle, d.adLink);
             }
 
             flag = DBHelper.SqlHelper.ExecuteSql(str);
