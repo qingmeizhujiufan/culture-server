@@ -12,25 +12,25 @@ using System.Web.Script.Serialization;
 
 namespace culture_server.Controllers
 {
-    public class AdController : ApiController
+    public class TasteController : ApiController
     {
-        #region 获取广告列表
+        #region 获取兴趣圈图片列表
         /// <summary>  
-        /// 获取广告列表 
+        /// 获取兴趣圈图片列表 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage queryList(dynamic d)
         {
-            DataTable dt = new BLL.handleAd().queryList();
+            DataTable dt = new BLL.handleTaste().queryList();
             Object data;
             if (dt.Rows.Count >= 0)
             {
-                List<ad> list = new List<ad>();
+                List<taste> list = new List<taste>();
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    list.Add(generateAd(dt.Rows[i]));
+                    list.Add(generateTaste(dt.Rows[i]));
                 }
 
                 data = new
@@ -57,23 +57,23 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 获取广告信息详情
+        #region 获取新闻信息详情
         /// <summary>  
-        /// 获取广告信息详情 
+        /// 获取新闻信息详情 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage queryDetail(string id)
         {
-            DataTable dt = new BLL.handleAd().queryDetail(id);
+            DataTable dt = new BLL.handleNews().queryDetail(id);
             Object data;
             if (dt.Rows.Count == 1)
             {
                 data = new
                 {
                     success = true,
-                    backData = generateAd(dt.Rows[0])
+                    backData = generateTaste(dt.Rows[0])
                 };
             }
             else
@@ -94,9 +94,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 更新或者新增广告信息
+        #region 更新或者新增新闻信息
         /// <summary>  
-        /// 更新或者新增广告信息 
+        /// 更新或者新增新闻信息 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -108,9 +108,9 @@ namespace culture_server.Controllers
 
             try
             {
-                BLL.handleAd ad = new BLL.handleAd();
+                BLL.handleNews news = new BLL.handleNews();
                 bool flag = false;
-                flag = ad.saveAP(d);
+                flag = news.saveAP(d);
 
                 if (flag)
                 {
@@ -148,9 +148,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 删除广告
+        #region 删除新闻
         /// <summary>  
-        /// 删除广告
+        /// 删除新闻
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -162,7 +162,7 @@ namespace culture_server.Controllers
             object data = new object();
             try
             {
-                BLL.handleAd news = new BLL.handleAd();
+                BLL.handleNews news = new BLL.handleNews();
                 bool flag = false;
 
                 flag = news.delete(id);
@@ -179,7 +179,7 @@ namespace culture_server.Controllers
                     data = new
                     {
                         success = false,
-                        backMsg = "删除广告信息失败"
+                        backMsg = "删除新闻信息失败"
 
                     };
                 }
@@ -217,8 +217,8 @@ namespace culture_server.Controllers
 
             try
             {
-                BLL.handleAd ad = new BLL.handleAd();
-                int flag = ad.review(d);
+                BLL.handleNews news = new BLL.handleNews();
+                int flag = news.review(d);
 
                 if (flag == 1)
                 {
@@ -284,15 +284,20 @@ namespace culture_server.Controllers
         #endregion
 
         #region 私有方法集
-        //返回ad对象
-        private ad generateAd(dynamic d)
+        //返回taste对象
+        private news generateTaste(dynamic d)
         {
-            ad n = new ad();
+            taste n = new taste();
             n.id = d["id"].ToString();
-            n.adCover = util.generateImage(d["adCover"].ToString());
-            n.adTitle = d["adTitle"].ToString();
-            n.adLink = d["adLink"].ToString();
+            n.tasteCover = util.generateImage(d["tasteCover"].ToString());
+            n.tasteBrief = d["tasteBrief"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
+            n.updator = d["updator"].ToString();
+            n.updatorName = d["updatorName"].ToString();
+            n.update_time = d["update_time"].ToString();
+            n.creator = d["creator"].ToString();
+            n.creatorName = d["creatorName"].ToString();
+            n.typeName = d["typeName"].ToString();
             n.create_time = d["create_time"].ToString();
 
             return n;

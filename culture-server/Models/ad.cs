@@ -9,6 +9,7 @@ namespace culture_server.Models
     {
         public string id { set; get; }
         public image adCover { set; get; }
+        public string adTitle { set; get; }
         public string adLink { set; get; }
         public int state { set; get; }
         public string create_time { set; get; }
