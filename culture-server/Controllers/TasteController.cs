@@ -285,17 +285,18 @@ namespace culture_server.Controllers
 
         #region 私有方法集
         //返回taste对象
-        private news generateTaste(dynamic d)
+        private taste generateTaste(dynamic d)
         {
             taste n = new taste();
             n.id = d["id"].ToString();
             n.tasteCover = util.generateImage(d["tasteCover"].ToString());
             n.tasteBrief = d["tasteBrief"].ToString();
+            n.likeNum = Convert.ToInt32(d["likeNum"].ToString());
+            n.commentNum = Convert.ToInt32(d["commentNum"].ToString());
             n.state = Convert.ToInt32(d["state"].ToString());
             n.updator = d["updator"].ToString();
             n.update_time = d["update_time"].ToString();
             n.creator = d["creator"].ToString();
-            n.typeName = d["typeName"].ToString();
             n.create_time = d["create_time"].ToString();
 
             return n;

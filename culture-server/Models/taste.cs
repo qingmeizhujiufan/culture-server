@@ -10,7 +10,7 @@ namespace culture_server.Models
         public string id { get; set; }
         public image tasteCover { get; set; }
         public string tasteBrief { get; set; }
-        public int collectNum { get; set; }
+        public int likeNum { get; set; }
         public int commentNum { get; set; }
         public int state { get; set; }
         public string updator { get; set; }
