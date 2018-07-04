@@ -293,10 +293,8 @@ namespace culture_server.Controllers
             n.tasteBrief = d["tasteBrief"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
             n.updator = d["updator"].ToString();
-            n.updatorName = d["updatorName"].ToString();
             n.update_time = d["update_time"].ToString();
             n.creator = d["creator"].ToString();
-            n.creatorName = d["creatorName"].ToString();
             n.typeName = d["typeName"].ToString();
             n.create_time = d["create_time"].ToString();
 

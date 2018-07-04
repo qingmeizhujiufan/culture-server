@@ -170,6 +170,7 @@
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\OrganizeController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
+    <Compile Include="Controllers\TasteController.cs" />
     <Compile Include="Core\SupportFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -178,6 +179,7 @@
     <Compile Include="Models\image.cs" />
     <Compile Include="Models\news.cs" />
     <Compile Include="Models\organize.cs" />
+    <Compile Include="Models\taste.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\util.cs" />
   </ItemGroup>
