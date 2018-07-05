@@ -12,22 +12,22 @@ using System.Web.Script.Serialization;
 
 namespace culture_server.Controllers
 {
-    public class TasteController : ApiController
+    public class UserController : ApiController
     {
-        #region 获取兴趣圈图片列表
+        #region 获取用户列表
         /// <summary>  
-        /// 获取兴趣圈图片列表 
+        /// 获取用户列表 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage queryList(dynamic d)
         {
-            DataTable dt = new BLL.handleTaste().queryList();
+            DataTable dt = new BLL.handleUser().queryList();
             Object data;
             if (dt.Rows.Count >= 0)
             {
-                List<taste> list = new List<taste>();
+                List<user> list = new List<user>();
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     list.Add(generateTaste(dt.Rows[i]));
@@ -57,16 +57,16 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 获取新闻信息详情
+        #region 获取用户信息详情
         /// <summary>  
-        /// 获取新闻信息详情 
+        /// 获取用户信息详情 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage queryDetail(string id)
         {
-            DataTable dt = new BLL.handleNews().queryDetail(id);
+            DataTable dt = new BLL.handleUser().queryDetail(id);
             Object data;
             if (dt.Rows.Count == 1)
             {
@@ -94,9 +94,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 更新或者新增新闻信息
+        #region 更新或者新增用户信息
         /// <summary>  
-        /// 更新或者新增新闻信息 
+        /// 更新或者新增用户信息 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -108,9 +108,9 @@ namespace culture_server.Controllers
 
             try
             {
-                BLL.handleNews news = new BLL.handleNews();
+                BLL.handleUser user = new BLL.handleUser();
                 bool flag = false;
-                flag = news.saveAP(d);
+                flag = user.saveAP(d);
 
                 if (flag)
                 {
@@ -148,9 +148,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 删除新闻
+        #region 删除用户
         /// <summary>  
-        /// 删除新闻
+        /// 删除用户
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -162,7 +162,7 @@ namespace culture_server.Controllers
             object data = new object();
             try
             {
-                BLL.handleNews news = new BLL.handleNews();
+                BLL.handleUser news = new BLL.handleUser();
                 bool flag = false;
 
                 flag = news.delete(id);
@@ -203,104 +203,29 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 审核新闻
+        #region 最近注册用户统计
         /// <summary>  
-        /// 审核新闻 
-        /// </summary>  
-        /// <param name="id">id</param>  
-        /// <returns></returns>
-        [SupportFilter]
-        [AcceptVerbs("OPTIONS", "POST")]
-        public HttpResponseMessage review(dynamic d)
-        {
-            Object data;
-
-            try
-            {
-                BLL.handleTaste taste = new BLL.handleTaste();
-                int flag = taste.review(d);
-
-                if (flag == 1)
-                {
-                    data = new
-                    {
-                        success = true
-                    };
-                }
-                else if (flag == 2)
-                {
-                    data = new
-                    {
-                        success = false,
-                        backMsg = "审核失败"
-
-                    };
-                }
-                else if (flag == -1)
-                {
-                    data = new
-                    {
-                        success = false,
-                        backMsg = "不允许审核"
-
-                    };
-                }
-                else if (flag == 0)
-                {
-                    data = new
-                    {
-                        success = false,
-                        backMsg = "新闻不存在"
-
-                    };
-                }
-                else
-                {
-                    data = new
-                    {
-                        success = false,
-                        backMsg = "系统异常，请重试！"
-
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                data = new
-                {
-                    success = false,
-                    backMsg = "服务异常"
-
-                };
-            }
-
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize(data);
-            return new HttpResponseMessage
-            {
-                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
-            };
-        }
-        #endregion
-
-        #region 获取TOP 10
-        /// <summary>  
-        /// 获取TOP 10 
+        /// 最近注册用户统计
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
         [SupportFilter]
         [AcceptVerbs("OPTIONS", "GET")]
-        public HttpResponseMessage queryRankingListTop10(string type)
+        public HttpResponseMessage getNewlyRegisterUserData(string type)
         {
-            DataTable dt = new BLL.handleTaste().queryRankingListTop10(type);
+            DataTable dt = new BLL.handleUser().getNewlyRegisterUserData(type);
             Object data;
             if (dt.Rows.Count >= 0)
             {
-                List<taste> list = new List<taste>();
+                List<userCount> list = new List<userCount>();
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    list.Add(generateTaste(dt.Rows[i]));
+                    userCount count = new userCount();
+                    count.id = dt.Rows[i]["id"].ToString();
+                    count.countDate = dt.Rows[i]["countDate"].ToString();
+                    count.num = Convert.ToInt32(dt.Rows[i]["num"].ToString());
+
+                    list.Add(count);
                 }
 
                 data = new
@@ -329,18 +254,17 @@ namespace culture_server.Controllers
 
         #region 私有方法集
         //返回taste对象
-        private taste generateTaste(dynamic d)
+        private user generateTaste(dynamic d)
         {
-            taste n = new taste();
+            user n = new user();
             n.id = d["id"].ToString();
-            n.tasteCover = util.generateImage(d["tasteCover"].ToString());
-            n.tasteBrief = d["tasteBrief"].ToString();
-            n.likeNum = Convert.ToInt32(d["likeNum"].ToString());
-            n.commentNum = Convert.ToInt32(d["commentNum"].ToString());
+            n.avatar = util.generateImage(d["avatar"].ToString());
+            n.sex = d["sex"].ToString();
+            n.userName = d["userName"].ToString();
+            n.nickName = d["nickName"].ToString();
+            n.telephone = d["telephone"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
-            n.updator = d["updator"].ToString();
-            n.update_time = d["update_time"].ToString();
-            n.creator = d["creator"].ToString();
+            n.isDelete = Convert.ToInt32(d["isDelete"].ToString());
             n.create_time = d["create_time"].ToString();
 
             return n;
