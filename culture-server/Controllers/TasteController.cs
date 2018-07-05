@@ -283,6 +283,50 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 获取TOP 10
+        /// <summary>  
+        /// 获取TOP 10 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryRankingListTop10(string type)
+        {
+            DataTable dt = new BLL.handleTaste().queryRankingListTop10(type);
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<taste> list = new List<taste>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    list.Add(generateTaste(dt.Rows[i]));
+                }
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 私有方法集
         //返回taste对象
         private taste generateTaste(dynamic d)
