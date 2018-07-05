@@ -129,5 +129,57 @@ namespace BLL
                 return 0;
             }
         }
+
+        //获取TOP 10 喜欢: like |  评论: comment
+        public DataTable queryRankingListTop10(string type)
+        {
+            string str = string.Empty;
+            if(type == "like"){
+                str = @"select top 10  a.id,
+	                                   a.tasteCover,
+	                                   a.tasteBrief,
+	                                   (select COUNT(id)
+			                                from dbo.c_taste_like b
+			                                where a.id = b.tasteId	
+	                                   ) as likeNum,	  
+	                                   (select COUNT(id)
+			                                from dbo.c_taste_comment c
+			                                where a.id = c.tasteId	
+	                                   ) as commentNum,
+	                                   a.state,
+	                                   a.updator,
+	                                   CONVERT(varchar(19), a.update_time, 120) as update_time,
+	                                   a.creator,
+	                                   CONVERT(varchar(19), a.create_time, 120) as create_time
+                                from dbo.c_taste a
+                                order by likeNum desc";
+            }
+            else if (type == "comment")
+            {
+                str = @"select top 10  a.id,
+	                                   a.tasteCover,
+	                                   a.tasteBrief,
+	                                   (select COUNT(id)
+			                                from dbo.c_taste_like b
+			                                where a.id = b.tasteId	
+	                                   ) as likeNum,	  
+	                                   (select COUNT(id)
+			                                from dbo.c_taste_comment c
+			                                where a.id = c.tasteId	
+	                                   ) as commentNum,
+	                                   a.state,
+	                                   a.updator,
+	                                   CONVERT(varchar(19), a.update_time, 120) as update_time,
+	                                   a.creator,
+	                                   CONVERT(varchar(19), a.create_time, 120) as create_time
+                                from dbo.c_taste a
+                                order by commentNum desc";
+            }
+            
+            str = string.Format(str);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
     }
 }
