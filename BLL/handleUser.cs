@@ -12,12 +12,16 @@ namespace BLL
         public DataTable queryList()
         {
             string str = @"select   id,
-                                    adCover,
-                                    adTitle,
-                                    adLink,
-                                    state,
+                                    avatar,
+                                    sex,
+                                    userName,
+                                    nickName,
+                                    telephone,
+                                    ISNULL(state, 0) as state,
+                                    ISNULL(isDelete, 0) as isDelete,
                                     CONVERT(varchar(19), create_time, 120) as create_time
-                                from dbo.c_user ";
+                                from dbo.c_user 
+                                where ISNULL(isDelete, 0) <> 1";
             str = string.Format(str);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
@@ -28,11 +32,14 @@ namespace BLL
         public DataTable queryDetail(string id)
         {
             string str = @"select   id,
-                                    adCover,
-                                    adTitle,
-                                    adLink,
-                                    state,
-                                    CONVERT(varchar(19), n.create_time, 120) as create_time
+                                    avatar,
+                                    sex,
+                                    userName,
+                                    nickName,
+                                    telephone,
+                                    ISNULL(state, 0) as state,
+                                    ISNULL(isDelete, 0) as isDelete,
+                                    CONVERT(varchar(19), create_time, 120) as create_time
                                 from dbo.c_user 
                                 where id='{0}'";
             str = string.Format(str, id);
@@ -69,10 +76,21 @@ namespace BLL
         }
 
         //删除用户 逻辑删除
-        public bool delete(string id)
+        public bool delete(string ids)
         {
-            string str = @"update dbo.c_user set isDelete=1 where id='{0}'";
-            str = string.Format(str, id);
+            string ids_str = "";
+            string[] ids_arr = ids.Split(',');
+            for (int i = 0; i < ids_arr.Length; i++)
+            {
+                ids = "'" + ids_arr[i] + "'";  //在每个元素前后加上我们想要的格式，效果例如：
+                if (i < ids_arr.Length - 1)  //根据数组元素的个数来判断应该加多少个逗号
+                {
+                    ids += ",";
+                }
+                ids_str += ids;
+            }
+            string str = "update dbo.c_user set isDelete=1 where id in(" + ids_str + ")";
+
             int flag = DBHelper.SqlHelper.ExecuteSql(str);
 
             return flag > 0 ? true : false;
