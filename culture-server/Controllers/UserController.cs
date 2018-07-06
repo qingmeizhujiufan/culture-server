@@ -30,7 +30,7 @@ namespace culture_server.Controllers
                 List<user> list = new List<user>();
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    list.Add(generateTaste(dt.Rows[i]));
+                    list.Add(generateUser(dt.Rows[i]));
                 }
 
                 data = new
@@ -73,7 +73,7 @@ namespace culture_server.Controllers
                 data = new
                 {
                     success = true,
-                    backData = generateTaste(dt.Rows[0])
+                    backData = generateUser(dt.Rows[0])
                 };
             }
             else
@@ -158,14 +158,14 @@ namespace culture_server.Controllers
         [AcceptVerbs("OPTIONS", "POST")]
         public HttpResponseMessage delete(dynamic d)
         {
-            string id = d.id;
+            string ids = d.ids;
             object data = new object();
             try
             {
-                BLL.handleUser news = new BLL.handleUser();
+                BLL.handleUser user = new BLL.handleUser();
                 bool flag = false;
 
-                flag = news.delete(id);
+                flag = user.delete(ids);
 
                 if (flag)
                 {
@@ -179,7 +179,7 @@ namespace culture_server.Controllers
                     data = new
                     {
                         success = false,
-                        backMsg = "删除新闻信息失败"
+                        backMsg = "删除用户失败"
 
                     };
                 }
@@ -253,8 +253,8 @@ namespace culture_server.Controllers
         #endregion
 
         #region 私有方法集
-        //返回taste对象
-        private user generateTaste(dynamic d)
+        //返回user对象
+        private user generateUser(dynamic d)
         {
             user n = new user();
             n.id = d["id"].ToString();
