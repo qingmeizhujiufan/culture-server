@@ -57,9 +57,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 获取新闻信息详情
+        #region 获取图片详情
         /// <summary>  
-        /// 获取新闻信息详情 
+        /// 获取图片详情 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -94,13 +94,12 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 更新或者新增新闻信息
+        #region 更新或者新增兴趣图片
         /// <summary>  
-        /// 更新或者新增新闻信息 
+        /// 更新或者新增兴趣图片 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
-        [SupportFilter]
         [AcceptVerbs("OPTIONS", "POST")]
         public HttpResponseMessage save(dynamic d)
         {
@@ -108,9 +107,9 @@ namespace culture_server.Controllers
 
             try
             {
-                BLL.handleNews news = new BLL.handleNews();
+                BLL.handleTaste taste = new BLL.handleTaste();
                 bool flag = false;
-                flag = news.saveAP(d);
+                flag = taste.saveAP(d);
 
                 if (flag)
                 {
@@ -148,9 +147,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 删除新闻
+        #region 删除图片
         /// <summary>  
-        /// 删除新闻
+        /// 删除图片
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -162,10 +161,10 @@ namespace culture_server.Controllers
             object data = new object();
             try
             {
-                BLL.handleNews news = new BLL.handleNews();
+                BLL.handleTaste taste = new BLL.handleTaste();
                 bool flag = false;
 
-                flag = news.delete(id);
+                flag = taste.delete(id);
 
                 if (flag)
                 {
@@ -179,7 +178,7 @@ namespace culture_server.Controllers
                     data = new
                     {
                         success = false,
-                        backMsg = "删除新闻信息失败"
+                        backMsg = "删除图片失败"
 
                     };
                 }
@@ -203,9 +202,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 审核新闻
+        #region 审核图片
         /// <summary>  
-        /// 审核新闻 
+        /// 审核图片 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -283,9 +282,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 获取TOP 10
+        #region 获取收藏或者评论TOP 10
         /// <summary>  
-        /// 获取TOP 10 
+        /// 获取收藏或者评论TOP 10
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>

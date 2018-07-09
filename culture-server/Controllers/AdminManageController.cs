@@ -21,6 +21,7 @@ namespace culture_server.Controllers
             {
                 string id = Guid.NewGuid().ToString();
                 image img = new image();
+                img.id = id;
                 img.fileName = file.FileName;
                 img.fileType = file.ContentType;
                 img.fileSize = file.ContentLength;
