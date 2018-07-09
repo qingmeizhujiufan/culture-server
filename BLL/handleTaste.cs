@@ -70,19 +70,17 @@ namespace BLL
             string id = d.id;
             if (string.IsNullOrEmpty(id))
             {
-                str = @"insert into dbo.c_taste (newsTitle, newsCover, newsBrief, newsContent, state, creator)
-                                values ('{0}', '{1}', '{2}', '{3}', 0, '{4}')";
-                str = string.Format(str, d.newsTitle, d.newsCover, d.newsBrief, d.newsContent, d.creator);
+                str = @"insert into dbo.c_taste (tasteCover, tasteBrief, state, creator)
+                                values ('{0}', '{1}', 1, '{2}')";
+                str = string.Format(str, d.tasteCover, d.tasteBrief, d.creator);
             }
             else
             {
                 str = @"update dbo.c_taste set 
-                                newsTitle='{1}', 
-                                newsCover='{2}', 
-                                newsBrief='{3}', 
-                                newsContent='{4}'
+                                tasteCover='{1}', 
+                                tasteBrief='{2}'
                                 where id='{0}'";
-                str = string.Format(str, d.id, d.newsTitle, d.newsCover, d.newsBrief, d.newsContent);
+                str = string.Format(str, d.id, d.tasteCover, d.tasteBrief);
             }
 
             flag = DBHelper.SqlHelper.ExecuteSql(str);

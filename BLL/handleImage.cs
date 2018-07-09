@@ -17,8 +17,9 @@ namespace BLL
                                     fileSize,
                                     filePath,
                                     CONVERT(varchar(19), create_time, 120) as create_time
-                               from dbo.c_file";
-            str = string.Format(str);
+                               from dbo.c_file
+                               where id='{0}'";
+            str = string.Format(str, id);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
             return dt;
@@ -27,9 +28,9 @@ namespace BLL
         //保存附件信息
         public bool save(dynamic d)
         {
-            string str = @"insert into dbo.c_file (fileName, fileType, fileSize, filePath)
-                                values ('{0}', '{1}', '{2}', '{3}')";
-            str = string.Format(str, d.fileName, d.fileType, d.fileSize, d.filePath);
+            string str = @"insert into dbo.c_file (id, fileName, fileType, fileSize, filePath)
+                                values ('{0}', '{1}', '{2}', '{3}', '{4}')";
+            str = string.Format(str, d.id, d.fileName, d.fileType, d.fileSize, d.filePath);
             int flag = DBHelper.SqlHelper.ExecuteSql(str);
 
             return flag > 0 ? true : false;
