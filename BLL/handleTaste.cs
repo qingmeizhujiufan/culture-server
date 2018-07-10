@@ -26,8 +26,12 @@ namespace BLL
 	                               a.updator,
 	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
 	                               a.creator,
+	                               u.avatar,
+	                               u.nickName as creatorName,
 	                               CONVERT(varchar(19), a.create_time, 120) as create_time
                             from dbo.c_taste a
+                            left join dbo.c_user u
+                            on a.creator = u.id
                             order by a.create_time desc";
             str = string.Format(str);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
@@ -53,8 +57,12 @@ namespace BLL
 	                               a.updator,
 	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
 	                               a.creator,
+                                   u.avatar,
+	                               u.nickName as creatorName,
 	                               CONVERT(varchar(19), a.create_time, 120) as create_time
                             from dbo.c_taste a
+                            left join dbo.c_user u
+                            on a.creator = u.id
                             where a.id='{0}'";
             str = string.Format(str, id);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
