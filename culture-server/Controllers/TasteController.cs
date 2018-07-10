@@ -337,9 +337,11 @@ namespace culture_server.Controllers
             n.likeNum = Convert.ToInt32(d["likeNum"].ToString());
             n.commentNum = Convert.ToInt32(d["commentNum"].ToString());
             n.state = Convert.ToInt32(d["state"].ToString());
+            n.avatar = util.generateImage(d["avatar"].ToString());
             n.updator = d["updator"].ToString();
             n.update_time = d["update_time"].ToString();
             n.creator = d["creator"].ToString();
+            n.creatorName = d["creatorName"].ToString();
             n.create_time = d["create_time"].ToString();
 
             return n;
