@@ -9,7 +9,44 @@ namespace BLL
     public class handleTaste
     {
         //获取兴趣圈图片列表
-        public DataTable queryList()
+        public DataTable queryList(string userId, int pageNumber, int pageSize)
+        {
+            string str = @"select  a.id,
+	                               a.tasteCover,
+	                               a.tasteBrief,
+                                   (select COUNT(id)
+										from dbo.c_taste_like as b
+										where a.id = b.tasteId and ";
+            str += (userId != null && userId != "") ? @"b.userId = '{0}'" : @"b.userId = NULL";
+            str += @") as isLike,
+	                               (select COUNT(id)
+			                            from dbo.c_taste_like b
+			                            where a.id = b.tasteId	
+	                               ) as likeNum,	  
+	                               (select COUNT(id)
+			                            from dbo.c_taste_comment c
+			                            where a.id = c.tasteId	
+	                               ) as commentNum,
+	                               a.state,
+	                               a.updator,
+	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
+	                               a.creator,
+	                               u.avatar,
+	                               u.nickName as creatorName,
+	                               CONVERT(varchar(19), a.create_time, 120) as create_time
+                            from dbo.c_taste a
+                            left join dbo.c_user u
+                            on a.creator = u.id
+                            where a.state=1
+                            order by a.create_time desc";
+            str = string.Format(str, userId);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
+        //获取管理兴趣圈图片列表
+        public DataTable queryListByAdmin()
         {
             string str = @"select  a.id,
 	                               a.tasteCover,
@@ -79,7 +116,7 @@ namespace BLL
             if (string.IsNullOrEmpty(id))
             {
                 str = @"insert into dbo.c_taste (tasteCover, tasteBrief, state, creator)
-                                values ('{0}', '{1}', 1, '{2}')";
+                                values ('{0}', '{1}', 0, '{2}')";
                 str = string.Format(str, d.tasteCover, d.tasteBrief, d.creator);
             }
             else
@@ -136,6 +173,34 @@ namespace BLL
             }
         }
 
+        //收藏图片
+        public bool collect(dynamic d)
+        {
+            string str = @"declare @id uniqueidentifier, @userId uniqueidentifier, @isExist int
+
+                                set @id = '{0}';
+
+                                set @userId = '{1}';
+
+                                set @isExist = (select COUNT(id) from dbo.c_taste_like where tasteId = @id and userId = @userId);
+
+                                if @isExist > 0
+
+                                     delete from dbo.c_taste_like where  tasteId = @id and userId = @userId
+
+                                else
+
+                                     begin
+
+                                          insert into dbo.c_taste_like (tasteId, userId) values(@id, @userId)
+
+                                     end";
+            str = string.Format(str, d.tasteId, d.userId);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
         //获取TOP 10 喜欢: like |  评论: comment
         public DataTable queryRankingListTop10(string type)
         {
@@ -156,8 +221,12 @@ namespace BLL
 	                                   a.updator,
 	                                   CONVERT(varchar(19), a.update_time, 120) as update_time,
 	                                   a.creator,
+                                       u.avatar,
+	                                   u.nickName as creatorName,
 	                                   CONVERT(varchar(19), a.create_time, 120) as create_time
                                 from dbo.c_taste a
+                                left join dbo.c_user u
+                                on a.creator = u.id
                                 order by likeNum desc";
             }
             else if (type == "comment")
@@ -173,12 +242,16 @@ namespace BLL
 			                                from dbo.c_taste_comment c
 			                                where a.id = c.tasteId	
 	                                   ) as commentNum,
-	                                   a.state,
+                                       a.state,
 	                                   a.updator,
 	                                   CONVERT(varchar(19), a.update_time, 120) as update_time,
 	                                   a.creator,
+                                       u.avatar,
+	                                   u.nickName as creatorName,
 	                                   CONVERT(varchar(19), a.create_time, 120) as create_time
                                 from dbo.c_taste a
+                                left join dbo.c_user u
+                                on a.creator = u.id
                                 order by commentNum desc";
             }
             
