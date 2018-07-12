@@ -57,6 +57,49 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 获取管理新闻列表
+        /// <summary>  
+        /// 获取管理新闻列表 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryListByAdmin(dynamic d)
+        {
+            DataTable dt = new BLL.handleNews().queryListByAdmin();
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<news> list = new List<news>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    list.Add(generateNews(dt.Rows[i]));
+                }
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 获取新闻信息详情
         /// <summary>  
         /// 获取新闻信息详情 
