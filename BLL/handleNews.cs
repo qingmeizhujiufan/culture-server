@@ -28,6 +28,34 @@ namespace BLL
                                     CONVERT(varchar(19), n.create_time, 120) as create_time
                                 from dbo.c_news n
                                 left join dbo.c_admin a
+                                on n.creator = a.id
+                                where state = 1";
+            str = string.Format(str);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
+        //获取管理新闻列表
+        public DataTable queryListByAdmin()
+        {
+            string str = @"select   n.id,
+                                    newsType,
+                                    newsTitle,
+                                    newsCover,
+                                    newsAuthor,
+                                    newsBrief,
+                                    newsContent,
+                                    state,
+                                    updator,
+                                    updatorName,
+                                    CONVERT(varchar(19), n.update_time, 120) as update_time,
+                                    creator,
+                                    a.userName as creatorName,
+                                    a.typeName,
+                                    CONVERT(varchar(19), n.create_time, 120) as create_time
+                                from dbo.c_news n
+                                left join dbo.c_admin a
                                 on n.creator = a.id";
             str = string.Format(str);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
