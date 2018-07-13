@@ -11,38 +11,61 @@ namespace BLL
         //获取兴趣圈图片列表
         public DataTable queryList(string userId, int pageNumber, int pageSize)
         {
-            string str = @"select  a.id,
-	                               a.tasteCover,
-	                               a.tasteBrief,
-                                   (select COUNT(id)
-										from dbo.c_taste_like as b
-										where a.id = b.tasteId and ";
+            string str = @" DECLARE @Start INT
+                            DECLARE @End INT
+                            SELECT @Start = {1}, @End = {2};
+
+                            ;WITH TastePage AS
+                            (
+		                            select a.id,
+                                            a.tasteCover,
+                                            a.tasteBrief,
+                                            (select COUNT(id)
+					                            from dbo.c_taste_like as b
+					                            where a.id = b.tasteId and ";
             str += (userId != null && userId != "") ? @"b.userId = '{0}'" : @"b.userId = NULL";
-            str += @") as isLike,
-	                               (select COUNT(id)
-			                            from dbo.c_taste_like b
-			                            where a.id = b.tasteId	
-	                               ) as likeNum,	  
-	                               (select COUNT(id)
-			                            from dbo.c_taste_comment c
-			                            where a.id = c.tasteId	
-	                               ) as commentNum,
-	                               a.state,
-	                               a.updator,
-	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
-	                               a.creator,
-	                               u.avatar,
-	                               u.nickName as creatorName,
-	                               CONVERT(varchar(19), a.create_time, 120) as create_time
-                            from dbo.c_taste a
-                            left join dbo.c_user u
-                            on a.creator = u.id
-                            where a.state=1
-                            order by a.create_time desc";
-            str = string.Format(str, userId);
+            str += @"  ) as isLike,
+                       (select COUNT(id)
+                            from dbo.c_taste_like b
+                            where a.id = b.tasteId	
+                       ) as likeNum,	  
+                       (select COUNT(id)
+                            from dbo.c_taste_comment c
+                            where a.id = c.tasteId	
+                       ) as commentNum,
+                       a.state,
+                       a.updator,
+                       CONVERT(varchar(19), a.update_time, 120) as update_time,
+                       a.creator,
+                       u.avatar,
+                       u.nickName as creatorName,
+                       CONVERT(varchar(19), a.create_time, 120) as create_time,
+                       ROW_NUMBER() OVER (ORDER BY a.create_time desc) AS RowNumber
+                from dbo.c_taste a
+                left join dbo.c_user u
+                on a.creator = u.id
+                where a.state=1
+        )
+        select id, tasteCover, tasteBrief, isLike, likeNum, commentNum, state, updator, update_time,creator, avatar, creatorName, create_time from TastePage
+        where RowNumber > @Start AND RowNumber <= @End
+        ORDER BY create_time desc";
+            str = string.Format(str, userId, (pageNumber - 1) * pageSize, pageNumber * pageSize);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
             return dt;
+        }
+
+        //获取指定状态图片数量
+        public int queryTotal(int type)
+        {
+            string str = @"select COUNT(id) as total
+                                from dbo.c_taste
+                                where state={0}";
+            str = string.Format(str, type);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+            int total = Convert.ToInt32(dt.Rows[0]["total"].ToString());
+
+            return total;
         }
 
         //获取管理兴趣圈图片列表
