@@ -24,6 +24,7 @@ namespace culture_server.Controllers
         public HttpResponseMessage queryList(string userId, int pageNumber, int pageSize)
         {
             DataTable dt = new BLL.handleTaste().queryList(userId, pageNumber, pageSize);
+            int total = new BLL.handleTaste().queryTotal(1);
             Object data;
             if (dt.Rows.Count >= 0)
             {
@@ -36,7 +37,10 @@ namespace culture_server.Controllers
                 data = new
                 {
                     success = true,
-                    backData = list
+                    backData = list,
+                    pageNumber = pageNumber,
+                    pageSize = pageSize,
+                    total = total
                 };
             }
             else
@@ -445,7 +449,7 @@ namespace culture_server.Controllers
             n.id = d["id"].ToString();
             n.tasteCover = util.generateImage(d["tasteCover"].ToString());
             n.tasteBrief = d["tasteBrief"].ToString();
-            n.isLike = Convert.ToInt32(d["isLike"].ToString());
+            n.isLike = d.Table.Columns.Contains("isLike") ? Convert.ToInt32(d["isLike"].ToString()) : 0;
             n.likeNum = Convert.ToInt32(d["likeNum"].ToString());
             n.commentNum = Convert.ToInt32(d["commentNum"].ToString());
             n.state = Convert.ToInt32(d["state"].ToString());
