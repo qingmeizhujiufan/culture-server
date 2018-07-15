@@ -21,9 +21,9 @@ namespace culture_server.Controllers
         /// <param name="id">id</param>  
         /// <returns></returns>
         [AcceptVerbs("OPTIONS", "GET")]
-        public HttpResponseMessage queryList(dynamic d)
+        public HttpResponseMessage queryList(int pageNumber, int pageSize, string conditionText)
         {
-            DataTable dt = new BLL.handleNews().getNewsList();
+            DataTable dt = new BLL.handleNews().getNewsList(pageNumber, pageSize, conditionText);
             Object data;
             if (dt.Rows.Count >= 0)
             {
