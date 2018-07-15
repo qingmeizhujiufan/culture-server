@@ -9,9 +9,14 @@ namespace BLL
     public class handleNews
     {
         //获取新闻列表
-        public DataTable getNewsList()
+        public DataTable getNewsList(int pageNumber, int pageSize, string conditionText)
         {
-            string str = @"select   n.id,
+            string str = @"DECLARE @Start INT
+                            DECLARE @End INT
+                            SELECT @Start = {0}, @End = {1};
+
+                            ;WITH NewsPage AS
+                            (select   n.id,
                                     newsType,
                                     newsTitle,
                                     newsCover,
@@ -25,12 +30,17 @@ namespace BLL
                                     creator,
                                     a.userName as creatorName,
                                     a.typeName,
-                                    CONVERT(varchar(19), n.create_time, 120) as create_time
+                                    CONVERT(varchar(19), n.create_time, 120) as create_time,
+									ROW_NUMBER() OVER (ORDER BY a.create_time desc) AS RowNumber
                                 from dbo.c_news n
                                 left join dbo.c_admin a
                                 on n.creator = a.id
-                                where state = 1";
-            str = string.Format(str);
+                                where state = 1 and newsTitle like '%{2}%'
+                                )
+                            select id, newsType, newsTitle, newsCover, newsAuthor, newsBrief, newsContent, state, updator, updatorName, update_time,creator, creatorName, typeName, create_time from NewsPage
+                            where RowNumber > @Start AND RowNumber <= @End
+                            ORDER BY create_time desc";
+            str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
             return dt;
