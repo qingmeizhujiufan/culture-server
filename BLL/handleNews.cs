@@ -9,14 +9,17 @@ namespace BLL
     public class handleNews
     {
         //获取新闻列表
-        public DataTable getNewsList(int pageNumber, int pageSize, string conditionText)
+        public DataTable getNewsList(int pageNumber, int pageSize, string conditionText, string cityId)
         {
+            string conditionCity = string.IsNullOrEmpty(cityId) ? @" and 1 = 1" : @" and n.cityId = '{3}'";
             string str = @"DECLARE @Start INT
                             DECLARE @End INT
                             SELECT @Start = {0}, @End = {1};
 
                             ;WITH NewsPage AS
                             (select   n.id,
+                                    n.cityId,
+                                    c.cityName,
                                     newsType,
                                     newsTitle,
                                     newsCover,
@@ -33,14 +36,17 @@ namespace BLL
                                     CONVERT(varchar(19), n.create_time, 120) as create_time,
 									ROW_NUMBER() OVER (ORDER BY a.create_time desc) AS RowNumber
                                 from dbo.c_news n
+                                left join dbo.c_city c
+                                on n.cityId = c.id
                                 left join dbo.c_admin a
                                 on n.creator = a.id
-                                where state = 1 and newsTitle like '%{2}%'
-                                )
-                            select id, newsType, newsTitle, newsCover, newsAuthor, newsBrief, newsContent, state, updator, updatorName, update_time,creator, creatorName, typeName, create_time from NewsPage
+                                where state = 1 and newsTitle like '%{2}%'";
+            str += conditionCity;
+            str += @")
+                            select id, cityId, cityName, newsType, newsTitle, newsCover, newsAuthor, newsBrief, newsContent, state, updator, updatorName, update_time,creator, creatorName, typeName, create_time from NewsPage
                             where RowNumber > @Start AND RowNumber <= @End
                             ORDER BY create_time desc";
-            str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText);
+            str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText, cityId);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
             return dt;
@@ -50,6 +56,8 @@ namespace BLL
         public DataTable queryListByAdmin()
         {
             string str = @"select   n.id,
+                                    n.cityId,
+                                    c.cityName,
                                     newsType,
                                     newsTitle,
                                     newsCover,
@@ -65,6 +73,8 @@ namespace BLL
                                     a.typeName,
                                     CONVERT(varchar(19), n.create_time, 120) as create_time
                                 from dbo.c_news n
+                                left join dbo.c_city c
+                                on n.cityId = c.id
                                 left join dbo.c_admin a
                                 on n.creator = a.id";
             str = string.Format(str);
@@ -77,6 +87,8 @@ namespace BLL
         public DataTable queryDetail(string id)
         {
             string str = @"select   n.id,
+                                    n.cityId,
+                                    c.cityName,
                                     newsType,
                                     newsTitle,
                                     newsCover,
@@ -92,6 +104,8 @@ namespace BLL
                                     a.typeName,
                                     CONVERT(varchar(19), n.create_time, 120) as create_time
                                 from dbo.c_news n
+                                left join dbo.c_city c
+                                on n.cityId = c.id
                                 left join dbo.c_admin a
                                 on n.creator = a.id
                                 where n.id='{0}'";
@@ -119,11 +133,12 @@ namespace BLL
                                 newsTitle='{1}', 
                                 newsCover='{2}', 
                                 newsBrief='{3}', 
-                                newsContent='{4}'
+                                newsContent='{4}',
+                                cityId='{5}'
                                 where id='{0}'";
-                str = string.Format(str, d.id, d.newsTitle, d.newsCover, d.newsBrief, d.newsContent);
+                str = string.Format(str, d.id, d.newsTitle, d.newsCover, d.newsBrief, d.newsContent, d.cityId);
             }
-            
+
             flag = DBHelper.SqlHelper.ExecuteSql(str);
 
             return flag > 0 ? true : false;
@@ -158,7 +173,8 @@ namespace BLL
                     if (flag > 0) return 1;
                     else return 2;
                 }
-                else {
+                else
+                {
                     return -1;
                 }
             }
