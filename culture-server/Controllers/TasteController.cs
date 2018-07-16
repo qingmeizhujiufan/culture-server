@@ -113,7 +113,7 @@ namespace culture_server.Controllers
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage queryDetail(string id)
         {
-            DataTable dt = new BLL.handleNews().queryDetail(id);
+            DataTable dt = new BLL.handleTaste().queryDetail(id);
             Object data;
             if (dt.Rows.Count == 1)
             {

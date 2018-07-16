@@ -8,6 +8,8 @@ namespace culture_server.Models
     public class news
     {
         public string id { set; get; }
+        public string cityId { set; get; }
+        public string cityName { set; get; }
         public string newsType { set; get; }
         public string newsTitle { set; get; }
         public image newsCover { set; get; }

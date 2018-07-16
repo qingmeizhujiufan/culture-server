@@ -21,9 +21,9 @@ namespace culture_server.Controllers
         /// <param name="id">id</param>  
         /// <returns></returns>
         [AcceptVerbs("OPTIONS", "GET")]
-        public HttpResponseMessage queryList(int pageNumber, int pageSize, string conditionText)
+        public HttpResponseMessage queryList(int pageNumber, int pageSize, string conditionText, string cityId)
         {
-            DataTable dt = new BLL.handleNews().getNewsList(pageNumber, pageSize, conditionText);
+            DataTable dt = new BLL.handleNews().getNewsList(pageNumber, pageSize, conditionText, cityId);
             Object data;
             if (dt.Rows.Count >= 0)
             {
@@ -332,6 +332,8 @@ namespace culture_server.Controllers
         {
             news n = new news();
             n.id = d["id"].ToString();
+            n.cityId = d["cityId"].ToString();
+            n.cityName = d["cityName"].ToString();
             n.newsType = d["newsType"].ToString();
             n.newsTitle = d["newsTitle"].ToString();
             n.newsCover = util.generateImage(d["newsCover"].ToString());
