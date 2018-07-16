@@ -183,6 +183,7 @@
     <Compile Include="Models\news.cs" />
     <Compile Include="Models\organize.cs" />
     <Compile Include="Models\taste.cs" />
+    <Compile Include="Models\tasteComment.cs" />
     <Compile Include="Models\user.cs" />
     <Compile Include="Models\userCount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

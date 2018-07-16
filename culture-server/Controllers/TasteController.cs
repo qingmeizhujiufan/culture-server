@@ -441,6 +441,102 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 获取评论列表
+        /// <summary>  
+        /// 获取评论列表 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryCommentList(string tasteId)
+        {
+            DataTable dt = new BLL.handleTaste().queryCommentList(tasteId);
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<tasteComment> list = new List<tasteComment>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    list.Add(generateTasteComment(dt.Rows[i]));
+                }
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 保存评论信息
+        /// <summary>  
+        /// 保存评论信息 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage add(dynamic d)
+        {
+            Object data;
+
+            try
+            {
+                BLL.handleTaste taste = new BLL.handleTaste();
+                bool flag = false;
+                flag = taste.add(d);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "保存信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 私有方法集
         //返回taste对象
         private taste generateTaste(dynamic d)
@@ -461,6 +557,23 @@ namespace culture_server.Controllers
             n.create_time = d["create_time"].ToString();
 
             return n;
+        }
+
+        //返回comment对象
+        private tasteComment generateTasteComment(dynamic d)
+        {
+            tasteComment t = new tasteComment();
+            t.id = d["id"].ToString();
+            t.pId = d["pId"].ToString();
+            t.tasteId = d["tasteId"].ToString();
+            t.userId = d["userId"].ToString();
+            t.avatar = util.generateImage(d["avatar"].ToString());
+            t.userName = d["userName"].ToString();
+            t.level = Convert.ToInt32(d["level"].ToString());
+            t.comment = d["comment"].ToString();
+            t.create_time = d["create_time"].ToString();
+
+            return t;
         }
         #endregion
     }
