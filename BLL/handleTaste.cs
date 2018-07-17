@@ -293,7 +293,6 @@ namespace BLL
                                    c.userId,
                                    u.avatar,
                                    u.userName,
-                                   c.level,
                                    c.comment,
 	                               CONVERT(varchar(19), c.create_time, 120) as create_time
                             from dbo.c_taste_comment c
@@ -314,15 +313,15 @@ namespace BLL
             string str = string.Empty;
             if (string.IsNullOrEmpty(pId))
             {
-                str = @"insert into dbo.c_taste_comment (pId, tasteId, userId, level, comment)
-                                values (NULL, '{0}', '{1}', {2}, '{3}')";
-                str = string.Format(str, d.tasteId, d.userId, d.level, d.comment);
+                str = @"insert into dbo.c_taste_comment (pId, tasteId, userId, comment)
+                                values (NULL, '{0}', '{1}', '{2}')";
+                str = string.Format(str, d.tasteId, d.userId, d.comment);
             }
             else
             {
-                str = @"insert into dbo.c_taste_comment (pId, tasteId, userId, level, comment)
-                                values ('{0}', '{1}', '{2}', {3}, '{4}')";
-                str = string.Format(str, d.pId, d.tasteId, d.userId, d.level, d.comment);
+                str = @"insert into dbo.c_taste_comment (pId, tasteId, userId, comment)
+                                values ('{0}', '{1}', '{2}', '{3}')";
+                str = string.Format(str, d.pId, d.tasteId, d.userId, d.comment);
             }         
 
             int flag = DBHelper.SqlHelper.ExecuteSql(str);
