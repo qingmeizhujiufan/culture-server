@@ -14,9 +14,9 @@ namespace culture_server.Controllers
 {
     public class CultureController : ApiController
     {
-        #region 获取新闻列表
+        #region 获取文化列表
         /// <summary>  
-        /// 获取新闻列表 
+        /// 获取文化列表 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -327,7 +327,7 @@ namespace culture_server.Controllers
         #endregion
 
         #region 私有方法集
-        //返回news对象
+        //返回culture对象
         private culture generateCulture(dynamic d)
         {
             culture n = new culture();

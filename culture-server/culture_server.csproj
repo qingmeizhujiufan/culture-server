@@ -167,6 +167,7 @@
     <Compile Include="Controllers\AdController.cs" />
     <Compile Include="Controllers\AdminManageController.cs" />
     <Compile Include="Controllers\CityController.cs" />
+    <Compile Include="Controllers\CultureController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\OrganizeController.cs" />
@@ -179,6 +180,7 @@
     </Compile>
     <Compile Include="Models\ad.cs" />
     <Compile Include="Models\city.cs" />
+    <Compile Include="Models\culture.cs" />
     <Compile Include="Models\image.cs" />
     <Compile Include="Models\news.cs" />
     <Compile Include="Models\organize.cs" />
