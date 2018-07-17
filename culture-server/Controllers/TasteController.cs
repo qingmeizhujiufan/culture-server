@@ -569,7 +569,6 @@ namespace culture_server.Controllers
             t.userId = d["userId"].ToString();
             t.avatar = util.generateImage(d["avatar"].ToString());
             t.userName = d["userName"].ToString();
-            t.level = Convert.ToInt32(d["level"].ToString());
             t.comment = d["comment"].ToString();
             t.create_time = d["create_time"].ToString();
 

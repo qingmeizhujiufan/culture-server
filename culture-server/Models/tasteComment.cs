@@ -13,7 +13,6 @@ namespace culture_server.Models
         public string userId { get; set; }
         public image avatar { get; set; }
         public string userName { get; set; }
-        public int level { get; set; }
         public string comment { get; set; }
         public string create_time { get; set; }
     }
