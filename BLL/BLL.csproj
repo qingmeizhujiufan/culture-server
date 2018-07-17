@@ -46,6 +46,7 @@
     <Compile Include="EnumData.cs" />
     <Compile Include="handleAd.cs" />
     <Compile Include="handleCity.cs" />
+    <Compile Include="handleCulture.cs" />
     <Compile Include="handleImage.cs" />
     <Compile Include="handleNews.cs" />
     <Compile Include="handleOrganize.cs" />
