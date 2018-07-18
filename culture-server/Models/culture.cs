@@ -10,12 +10,12 @@ namespace culture_server.Models
         public string id { set; get; }
         public string cityId { set; get; }
         public string cityName { set; get; }
-        public string newsType { set; get; }
-        public string newsTitle { set; get; }
-        public image newsCover { set; get; }
-        public string newsAuthor { set; get; }
-        public string newsBrief { set; get; }
-        public string newsContent { set; get; }
+        public string cultureType { set; get; }
+        public string cultureTitle { set; get; }
+        public image cultureCover { set; get; }
+        public string cultureAuthor { set; get; }
+        public string cultureBrief { set; get; }
+        public string cultureContent { set; get; }
         public int state { set; get; }
         public string updator { set; get; }
         public string updatorName { set; get; }

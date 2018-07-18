@@ -23,7 +23,7 @@ namespace culture_server.Controllers
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage queryList(int pageNumber, int pageSize, string conditionText, string cityId)
         {
-            DataTable dt = new BLL.handleCulture().getNewsList(pageNumber, pageSize, conditionText, cityId);
+            DataTable dt = new BLL.handleCulture().queryList(pageNumber, pageSize, conditionText, cityId);
             Object data;
             if (dt.Rows.Count >= 0)
             {
@@ -57,9 +57,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 获取管理新闻列表
+        #region 获取管理文化列表
         /// <summary>  
-        /// 获取管理新闻列表 
+        /// 获取管理文化列表 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -100,9 +100,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 获取新闻信息详情
+        #region 获取文化信息详情
         /// <summary>  
-        /// 获取新闻信息详情 
+        /// 获取文化信息详情 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -137,9 +137,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 更新或者新增新闻信息
+        #region 更新或者新增文化信息
         /// <summary>  
-        /// 更新或者新增新闻信息 
+        /// 更新或者新增文化信息 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -191,9 +191,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 删除新闻
+        #region 删除文化
         /// <summary>  
-        /// 删除新闻
+        /// 删除文化
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -246,9 +246,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 审核新闻
+        #region 审核文化
         /// <summary>  
-        /// 审核新闻 
+        /// 审核文化 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -334,12 +334,12 @@ namespace culture_server.Controllers
             n.id = d["id"].ToString();
             n.cityId = d["cityId"].ToString();
             n.cityName = d["cityName"].ToString();
-            n.newsType = d["newsType"].ToString();
-            n.newsTitle = d["newsTitle"].ToString();
-            n.newsCover = util.generateImage(d["newsCover"].ToString());
-            n.newsContent = d["newsContent"].ToString();
-            n.newsAuthor = d["newsAuthor"].ToString();
-            n.newsBrief = d["newsBrief"].ToString();
+            n.cultureType = d["cultureType"].ToString();
+            n.cultureTitle = d["cultureTitle"].ToString();
+            n.cultureCover = util.generateImage(d["cultureCover"].ToString());
+            n.cultureContent = d["cultureContent"].ToString();
+            n.cultureAuthor = d["cultureAuthor"].ToString();
+            n.cultureBrief = d["cultureBrief"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
             n.updator = d["updator"].ToString();
             n.updatorName = d["updatorName"].ToString();
