@@ -8,24 +8,24 @@ namespace BLL
 {
     public class handleCulture
     {
-        //获取新闻列表
-        public DataTable getNewsList(int pageNumber, int pageSize, string conditionText, string cityId)
+        //获取文化列表
+        public DataTable queryList(int pageNumber, int pageSize, string conditionText, string cityId)
         {
             string conditionCity = string.IsNullOrEmpty(cityId) ? @" and 1 = 1" : @" and n.cityId = '{3}'";
             string str = @"DECLARE @Start INT
                             DECLARE @End INT
                             SELECT @Start = {0}, @End = {1};
 
-                            ;WITH NewsPage AS
+                            ;WITH CulturePage AS
                             (select   n.id,
                                     n.cityId,
                                     c.cityName,
-                                    newsType,
-                                    newsTitle,
-                                    newsCover,
-                                    newsAuthor,
-                                    newsBrief,
-                                    newsContent,
+                                    cultureType,
+                                    cultureTitle,
+                                    cultureCover,
+                                    cultureAuthor,
+                                    cultureBrief,
+                                    cultureContent,
                                     state,
                                     updator,
                                     updatorName,
@@ -35,15 +35,15 @@ namespace BLL
                                     a.typeName,
                                     CONVERT(varchar(19), n.create_time, 120) as create_time,
 									ROW_NUMBER() OVER (ORDER BY a.create_time desc) AS RowNumber
-                                from dbo.c_news n
+                                from dbo.c_culture n
                                 left join dbo.c_city c
                                 on n.cityId = c.id
                                 left join dbo.c_admin a
                                 on n.creator = a.id
-                                where state = 1 and newsTitle like '%{2}%'";
+                                where state = 1 and cultureTitle like '%{2}%'";
             str += conditionCity;
             str += @")
-                            select id, cityId, cityName, newsType, newsTitle, newsCover, newsAuthor, newsBrief, newsContent, state, updator, updatorName, update_time,creator, creatorName, typeName, create_time from NewsPage
+                            select id, cityId, cityName, cultureType, cultureTitle, cultureCover, cultureAuthor, cultureBrief, cultureContent, state, updator, updatorName, update_time,creator, creatorName, typeName, create_time from CulturePage
                             where RowNumber > @Start AND RowNumber <= @End
                             ORDER BY create_time desc";
             str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText, cityId);
@@ -52,18 +52,18 @@ namespace BLL
             return dt;
         }
 
-        //获取管理新闻列表
+        //获取管理文化列表
         public DataTable queryListByAdmin()
         {
             string str = @"select   n.id,
                                     n.cityId,
                                     c.cityName,
-                                    newsType,
-                                    newsTitle,
-                                    newsCover,
-                                    newsAuthor,
-                                    newsBrief,
-                                    newsContent,
+                                    cultureType,
+                                    cultureTitle,
+                                    cultureCover,
+                                    cultureAuthor,
+                                    cultureBrief,
+                                    cultureContent,
                                     state,
                                     updator,
                                     updatorName,
@@ -72,7 +72,7 @@ namespace BLL
                                     a.userName as creatorName,
                                     a.typeName,
                                     CONVERT(varchar(19), n.create_time, 120) as create_time
-                                from dbo.c_news n
+                                from dbo.c_culture n
                                 left join dbo.c_city c
                                 on n.cityId = c.id
                                 left join dbo.c_admin a
@@ -83,18 +83,18 @@ namespace BLL
             return dt;
         }
 
-        //获取新闻详情
+        //获取文化详情
         public DataTable queryDetail(string id)
         {
             string str = @"select   n.id,
                                     n.cityId,
                                     c.cityName,
-                                    newsType,
-                                    newsTitle,
-                                    newsCover,
-                                    newsAuthor,
-                                    newsBrief,
-                                    newsContent,
+                                    cultureType,
+                                    cultureTitle,
+                                    cultureCover,
+                                    cultureAuthor,
+                                    cultureBrief,
+                                    cultureContent,
                                     state,
                                     updator,
                                     updatorName,
@@ -103,7 +103,7 @@ namespace BLL
                                     a.userName as creatorName,
                                     a.typeName,
                                     CONVERT(varchar(19), n.create_time, 120) as create_time
-                                from dbo.c_news n
+                                from dbo.c_culture n
                                 left join dbo.c_city c
                                 on n.cityId = c.id
                                 left join dbo.c_admin a
@@ -115,7 +115,7 @@ namespace BLL
             return dt;
         }
 
-        //保存新闻
+        //保存文化
         public bool saveAP(dynamic d)
         {
             string str = string.Empty;
@@ -123,20 +123,20 @@ namespace BLL
             string id = d.id;
             if (string.IsNullOrEmpty(id))
             {
-                str = @"insert into dbo.c_news (newsTitle, newsCover, newsBrief, newsContent, state, creator)
+                str = @"insert into dbo.c_culture (cultureTitle, cultureCover, cultureBrief, cultureContent, state, creator)
                                 values ('{0}', '{1}', '{2}', '{3}', 0, '{4}')";
-                str = string.Format(str, d.newsTitle, d.newsCover, d.newsBrief, d.newsContent, d.creator);
+                str = string.Format(str, d.cultureTitle, d.cultureCover, d.cultureBrief, d.cultureContent, d.creator);
             }
             else
             {
-                str = @"update dbo.c_news set 
-                                newsTitle='{1}', 
-                                newsCover='{2}', 
-                                newsBrief='{3}', 
-                                newsContent='{4}',
+                str = @"update dbo.c_culture set 
+                                cultureTitle='{1}', 
+                                cultureCover='{2}', 
+                                cultureBrief='{3}', 
+                                cultureContent='{4}',
                                 cityId='{5}'
                                 where id='{0}'";
-                str = string.Format(str, d.id, d.newsTitle, d.newsCover, d.newsBrief, d.newsContent, d.cityId);
+                str = string.Format(str, d.id, d.cultureTitle, d.cultureCover, d.cultureBrief, d.cultureContent, d.cityId);
             }
 
             flag = DBHelper.SqlHelper.ExecuteSql(str);
@@ -144,17 +144,17 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
-        //删除新闻
+        //删除文化
         public bool delete(string id)
         {
-            string str = @"delete dbo.c_news where id='{0}'";
+            string str = @"delete dbo.c_culture where id='{0}'";
             str = string.Format(str, id);
             int flag = DBHelper.SqlHelper.ExecuteSql(str);
 
             return flag > 0 ? true : false;
         }
 
-        //审核新闻   return   0: 未找到新闻； 1: 审核成功； 2: 审核失败; -1: 不允许审核;
+        //审核文化   return   0: 未找到文化； 1: 审核成功； 2: 审核失败; -1: 不允许审核;
         public int review(dynamic d)
         {
             string str = string.Empty;
@@ -165,7 +165,7 @@ namespace BLL
                 int state = Convert.ToInt32(dt.Rows[0]["state"].ToString());
                 if (state == 0)
                 {
-                    str = @"update dbo.c_news set 
+                    str = @"update dbo.c_culture set 
                                 state=1
                                 where id='{0}'";
                     str = string.Format(str, d.id);
