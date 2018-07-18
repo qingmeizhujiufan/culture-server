@@ -306,7 +306,7 @@ namespace BLL
             return dt;
         }
 
-        //保存兴趣圈图片
+        //新增评论
         public bool add(dynamic d)
         {
             string pId = d.pId;

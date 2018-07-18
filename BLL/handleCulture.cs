@@ -123,9 +123,9 @@ namespace BLL
             string id = d.id;
             if (string.IsNullOrEmpty(id))
             {
-                str = @"insert into dbo.c_culture (cultureTitle, cultureCover, cultureBrief, cultureContent, state, creator)
-                                values ('{0}', '{1}', '{2}', '{3}', 0, '{4}')";
-                str = string.Format(str, d.cultureTitle, d.cultureCover, d.cultureBrief, d.cultureContent, d.creator);
+                str = @"insert into dbo.c_culture (cultureTitle, cultureCover, cultureBrief, cultureContent, cityId, state, creator)
+                                values ('{0}', '{1}', '{2}', '{3}', '{4}', 0, '{5}')";
+                str = string.Format(str, d.cultureTitle, d.cultureCover, d.cultureBrief, d.cultureContent, d.cityId, d.creator);
             }
             else
             {
@@ -182,6 +182,51 @@ namespace BLL
             {
                 return 0;
             }
+        }
+
+        //查询评论信息
+        public DataTable queryCommentList(string cultureId)
+        {
+            string str = @"select  c.id,
+	                               c.pId,
+	                               c.cultureId,
+                                   c.userId,
+                                   u.avatar,
+                                   u.userName,
+                                   c.comment,
+	                               CONVERT(varchar(19), c.create_time, 120) as create_time
+                            from dbo.c_culture_comment c
+                            left join dbo.c_user u
+                            on c.userId = u.id
+                            where c.cultureId = '{0}'
+                            order by c.create_time desc";
+            str = string.Format(str, cultureId);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
+        //保存评论
+        public bool add(dynamic d)
+        {
+            string pId = d.pId;
+            string str = string.Empty;
+            if (string.IsNullOrEmpty(pId))
+            {
+                str = @"insert into dbo.c_culture_comment (pId, cultureId, userId, comment)
+                                values (NULL, '{0}', '{1}', '{2}')";
+                str = string.Format(str, d.cultureId, d.userId, d.comment);
+            }
+            else
+            {
+                str = @"insert into dbo.c_culture_comment (pId, cultureId, userId, comment)
+                                values ('{0}', '{1}', '{2}', '{3}')";
+                str = string.Format(str, d.pId, d.cultureId, d.userId, d.comment);
+            }
+
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
         }
     }
 }
