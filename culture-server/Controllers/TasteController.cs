@@ -441,6 +441,49 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 获取用户其他发布
+        /// <summary>  
+        /// 获取用户其他发布
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryUserOtherPic(string userId, string tasteId)
+        {
+            DataTable dt = new BLL.handleTaste().queryUserOtherPic(userId, tasteId);
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<taste> list = new List<taste>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    list.Add(generateTaste(dt.Rows[i]));
+                }
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 获取评论列表
         /// <summary>  
         /// 获取评论列表 
