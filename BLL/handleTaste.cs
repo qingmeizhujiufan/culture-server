@@ -284,6 +284,38 @@ namespace BLL
             return dt;
         }
 
+        //获取用户其他发布图片
+        public DataTable queryUserOtherPic(string userId, string tasteId)
+        {
+            string str = @"select top 5  a.id,
+	                               a.tasteCover,
+	                               a.tasteBrief,
+	                               (select COUNT(id)
+			                            from dbo.c_taste_like b
+			                            where a.id = b.tasteId	
+	                               ) as likeNum,	  
+	                               (select COUNT(id)
+			                            from dbo.c_taste_comment c
+			                            where a.id = c.tasteId	
+	                               ) as commentNum,
+	                               a.state,
+	                               a.updator,
+	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
+	                               a.creator,
+	                               u.avatar,
+	                               u.nickName as creatorName,
+	                               CONVERT(varchar(19), a.create_time, 120) as create_time
+                            from dbo.c_taste a
+                            left join dbo.c_user u
+                            on a.creator = u.id
+                            where a.creator='{0}' and a.id <> '{1}'
+                            order by a.create_time desc";
+            str = string.Format(str, userId, tasteId);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
         //查询评论信息
         public DataTable queryCommentList(string tasteId)
         {
