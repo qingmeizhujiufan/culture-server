@@ -45,6 +45,7 @@
     <Compile Include="DataModal.cs" />
     <Compile Include="EnumData.cs" />
     <Compile Include="handleAd.cs" />
+    <Compile Include="handleArt.cs" />
     <Compile Include="handleCity.cs" />
     <Compile Include="handleCulture.cs" />
     <Compile Include="handleImage.cs" />
