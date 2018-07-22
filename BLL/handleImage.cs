@@ -8,6 +8,33 @@ namespace BLL
 {
     public class handleImage
     {
+        //获取附件列表
+        public DataTable queryList(string ids)
+        {
+            string ids_str = "";
+            string[] ids_arr = ids.Split(',');
+            for (int i = 0; i < ids_arr.Length; i++)
+            {
+                ids = "'" + ids_arr[i] + "'";  //在每个元素前后加上我们想要的格式，效果例如：
+                if (i < ids_arr.Length - 1)  //根据数组元素的个数来判断应该加多少个逗号
+                {
+                    ids += ",";
+                }
+                ids_str += ids;
+            }
+            string str = @"select   id,
+                                    fileName,
+                                    fileType,
+                                    fileSize,
+                                    filePath,
+                                    CONVERT(varchar(19), create_time, 120) as create_time
+                               from dbo.c_file
+                               where id in(" + ids_str + ")";
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
         //获取附件信息
         public DataTable queryDetail(string id)
         {

@@ -24,9 +24,12 @@ namespace BLL
                                     artTitle,
                                     artCover,
                                     artAuthor,
+                                    ISNULL(artMoney, 0) artMoney,
+                                    buyUrl,
                                     artBrief,
                                     artContent,
                                     state,
+                                    ISNULL(isRecommend, 0) isRecommend,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -43,7 +46,7 @@ namespace BLL
                                 where state = 1 and artTitle like '%{2}%'";
             str += conditionCity;
             str += @")
-                            select id, cityId, cityName, artType, artTitle, artCover, artAuthor, artBrief, artContent, state, updator, updatorName, update_time,creator, creatorName, typeName, create_time from ArtPage
+                            select id, cityId, cityName, artType, artTitle, artCover, artAuthor, artMoney, buyUrl, artBrief, artContent, state, isRecommend, updator, updatorName, update_time,creator, creatorName, typeName, create_time from ArtPage
                             where RowNumber > @Start AND RowNumber <= @End
                             ORDER BY create_time desc";
             str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText, cityId);
@@ -62,9 +65,12 @@ namespace BLL
                                     artTitle,
                                     artCover,
                                     artAuthor,
+                                    ISNULL(artMoney, 0) artMoney,
+                                    buyUrl,
                                     artBrief,
                                     artContent,
                                     state,
+                                    ISNULL(isRecommend, 0) isRecommend,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -93,9 +99,12 @@ namespace BLL
                                     artTitle,
                                     artCover,
                                     artAuthor,
+                                    ISNULL(artMoney, 0) artMoney,
+                                    buyUrl,
                                     artBrief,
                                     artContent,
                                     state,
+                                    ISNULL(isRecommend, 0) isRecommend,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -123,9 +132,9 @@ namespace BLL
             string id = d.id;
             if (string.IsNullOrEmpty(id))
             {
-                str = @"insert into dbo.c_art (artTitle, artCover, artBrief, artContent, cityId, state, creator)
-                                values ('{0}', '{1}', '{2}', '{3}', '{4}', 0, '{5}')";
-                str = string.Format(str, d.artTitle, d.artCover, d.artBrief, d.artContent, d.cityId, d.creator);
+                str = @"insert into dbo.c_art (artTitle, artCover, artBrief, artContent, cityId, state, creator, artMoney, buyUrl)
+                                values ('{0}', '{1}', '{2}', '{3}', '{4}', 0, '{5}', {6}, '{7}')";
+                str = string.Format(str, d.artTitle, d.artCover, d.artBrief, d.artContent, d.cityId, d.creator, d.artMoney, d.buyUrl);
             }
             else
             {
@@ -134,9 +143,11 @@ namespace BLL
                                 artCover='{2}', 
                                 artBrief='{3}', 
                                 artContent='{4}',
-                                cityId='{5}'
+                                cityId='{5}',
+                                artMoney={6},
+                                buyUrl='{7}'
                                 where id='{0}'";
-                str = string.Format(str, d.id, d.artTitle, d.artCover, d.artBrief, d.artContent, d.cityId);
+                str = string.Format(str, d.id, d.artTitle, d.artCover, d.artBrief, d.artContent, d.cityId, d.artMoney, d.buyUrl);
             }
 
             flag = DBHelper.SqlHelper.ExecuteSql(str);
@@ -182,6 +193,56 @@ namespace BLL
             {
                 return 0;
             }
+        }
+
+        //是否设置艺术品为推荐
+        public bool settingRecommend(dynamic d)
+        { 
+            string str = @"update dbo.c_art set 
+                                isRecommend= {1},
+                                update_time='{2}'
+                                where id='{0}'";
+            str = string.Format(str, d.id, d.isRecommend, System.DateTime.Now);
+
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
+        //获取Top3 推荐
+        public DataTable queryRecommendTop3()
+        {
+            string str = @"select top 3   n.id,
+                                    n.cityId,
+                                    c.cityName,
+                                    artType,
+                                    artTitle,
+                                    artCover,
+                                    artAuthor,
+                                    ISNULL(artMoney, 0) artMoney,
+                                    buyUrl,
+                                    artBrief,
+                                    artContent,
+                                    state,
+                                    ISNULL(isRecommend, 0) isRecommend,
+                                    updator,
+                                    updatorName,
+                                    CONVERT(varchar(19), n.update_time, 120) as update_time,
+                                    creator,
+                                    a.userName as creatorName,
+                                    a.typeName,
+                                    CONVERT(varchar(19), n.create_time, 120) as create_time
+                                from dbo.c_art n
+                                left join dbo.c_city c
+                                on n.cityId = c.id
+                                left join dbo.c_admin a
+                                on n.creator = a.id
+                                where n.state = 1 and n.isRecommend = 1
+                                order by n.update_time desc";
+            str = string.Format(str);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
         }
 
         //查询评论信息
