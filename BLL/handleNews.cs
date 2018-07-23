@@ -123,9 +123,9 @@ namespace BLL
             string id = d.id;
             if (string.IsNullOrEmpty(id))
             {
-                str = @"insert into dbo.c_news (newsTitle, newsCover, newsBrief, newsContent, state, creator)
-                                values ('{0}', '{1}', '{2}', '{3}', 0, '{4}')";
-                str = string.Format(str, d.newsTitle, d.newsCover, d.newsBrief, d.newsContent, d.creator);
+                str = @"insert into dbo.c_news (newsTitle, newsCover, newsBrief, newsContent, state, creator, cityId)
+                                values ('{0}', '{1}', '{2}', '{3}', 0, '{4}', '{5}')";
+                str = string.Format(str, d.newsTitle, d.newsCover, d.newsBrief, d.newsContent, d.creator, d.cityId);
             }
             else
             {

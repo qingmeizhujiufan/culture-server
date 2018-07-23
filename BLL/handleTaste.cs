@@ -183,9 +183,9 @@ namespace BLL
                 if (state == 0)
                 {
                     str = @"update dbo.c_taste set 
-                                state=1
+                                state={1}
                                 where id='{0}'";
-                    str = string.Format(str, d.id);
+                    str = string.Format(str, d.id, d.state);
                     int flag = DBHelper.SqlHelper.ExecuteSql(str);
                     if (flag > 0) return 1;
                     else return 2;
@@ -236,6 +236,7 @@ namespace BLL
             if(type == "like"){
                 str = @"select top 10  a.id,
 	                                   a.tasteCover,
+                                       a.tasteTitle,
 	                                   a.tasteBrief,
 	                                   (select COUNT(id)
 			                                from dbo.c_taste_like b
@@ -261,6 +262,7 @@ namespace BLL
             {
                 str = @"select top 10  a.id,
 	                                   a.tasteCover,
+                                       a.tasteTitle,
 	                                   a.tasteBrief,
 	                                   (select COUNT(id)
 			                                from dbo.c_taste_like b
