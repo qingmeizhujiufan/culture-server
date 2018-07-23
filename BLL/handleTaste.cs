@@ -19,6 +19,7 @@ namespace BLL
                             (
 		                            select a.id,
                                             a.tasteCover,
+                                            a.tasteTitle,
                                             a.tasteBrief,
                                             (select COUNT(id)
 					                            from dbo.c_taste_like as b
@@ -46,7 +47,7 @@ namespace BLL
                 on a.creator = u.id
                 where a.state=1
         )
-        select id, tasteCover, tasteBrief, isLike, likeNum, commentNum, state, updator, update_time,creator, avatar, creatorName, create_time from TastePage
+        select id, tasteCover, tasteTitle, tasteBrief, isLike, likeNum, commentNum, state, updator, update_time,creator, avatar, creatorName, create_time from TastePage
         where RowNumber > @Start AND RowNumber <= @End
         ORDER BY create_time desc";
             str = string.Format(str, userId, (pageNumber - 1) * pageSize, pageNumber * pageSize);
@@ -73,6 +74,7 @@ namespace BLL
         {
             string str = @"select  a.id,
 	                               a.tasteCover,
+                                   a.tasteTitle,
 	                               a.tasteBrief,
 	                               (select COUNT(id)
 			                            from dbo.c_taste_like b
@@ -104,6 +106,7 @@ namespace BLL
         {
             string str = @"select  a.id,
 	                               a.tasteCover,
+                                   a.tasteTitle,
 	                               a.tasteBrief,
 	                               (select COUNT(id)
 			                            from dbo.c_taste_like b
@@ -138,17 +141,18 @@ namespace BLL
             string id = d.id;
             if (string.IsNullOrEmpty(id))
             {
-                str = @"insert into dbo.c_taste (tasteCover, tasteBrief, state, creator)
-                                values ('{0}', '{1}', 0, '{2}')";
-                str = string.Format(str, d.tasteCover, d.tasteBrief, d.creator);
+                str = @"insert into dbo.c_taste (tasteCover, tasteTitle, tasteBrief, state, creator)
+                                values ('{0}', '{1}', '{2}', 0, '{3}')";
+                str = string.Format(str, d.tasteCover, d.tasteTitle, d.tasteBrief, d.creator);
             }
             else
             {
                 str = @"update dbo.c_taste set 
-                                tasteCover='{1}', 
-                                tasteBrief='{2}'
+                                tasteCover='{1}',
+                                tasteTitle='{2}', 
+                                tasteBrief='{3}'
                                 where id='{0}'";
-                str = string.Format(str, d.id, d.tasteCover, d.tasteBrief);
+                str = string.Format(str, d.id, d.tasteCover, d.tasteTitle, d.tasteBrief);
             }
 
             flag = DBHelper.SqlHelper.ExecuteSql(str);
@@ -157,8 +161,9 @@ namespace BLL
         }
 
         //删除兴趣圈图片
-        public bool delete(string id)
+        public bool delete(dynamic d)
         {
+            string id = d.id;
             string str = @"delete dbo.c_taste where id='{0}'";
             str = string.Format(str, id);
             int flag = DBHelper.SqlHelper.ExecuteSql(str);
@@ -284,11 +289,45 @@ namespace BLL
             return dt;
         }
 
+        //获取用户发布图片
+        public DataTable queryUserPic(string userId)
+        {
+            string str = @"select  a.id,
+	                               a.tasteCover,
+                                   a.tasteTitle,
+	                               a.tasteBrief,
+	                               (select COUNT(id)
+			                            from dbo.c_taste_like b
+			                            where a.id = b.tasteId	
+	                               ) as likeNum,	  
+	                               (select COUNT(id)
+			                            from dbo.c_taste_comment c
+			                            where a.id = c.tasteId	
+	                               ) as commentNum,
+	                               a.state,
+	                               a.updator,
+	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
+	                               a.creator,
+	                               u.avatar,
+	                               u.nickName as creatorName,
+	                               CONVERT(varchar(19), a.create_time, 120) as create_time
+                            from dbo.c_taste a
+                            left join dbo.c_user u
+                            on a.creator = u.id
+                            where a.creator='{0}'
+                            order by a.create_time desc";
+            str = string.Format(str, userId);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
         //获取用户其他发布图片
         public DataTable queryUserOtherPic(string userId, string tasteId)
         {
             string str = @"select top 5  a.id,
 	                               a.tasteCover,
+                                   a.tasteTitle,
 	                               a.tasteBrief,
 	                               (select COUNT(id)
 			                            from dbo.c_taste_like b
