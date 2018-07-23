@@ -200,18 +200,16 @@ namespace culture_server.Controllers
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
-        [SupportFilter]
         [AcceptVerbs("OPTIONS", "POST")]
         public HttpResponseMessage delete(dynamic d)
-        {
-            string id = d.id;
+        {          
             object data = new object();
             try
             {
                 BLL.handleTaste taste = new BLL.handleTaste();
                 bool flag = false;
 
-                flag = taste.delete(id);
+                flag = taste.delete(d);
 
                 if (flag)
                 {
@@ -225,7 +223,7 @@ namespace culture_server.Controllers
                     data = new
                     {
                         success = false,
-                        backMsg = "删除图片失败"
+                        backMsg = "删除失败"
 
                     };
                 }
@@ -441,6 +439,49 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 获取用户发布
+        /// <summary>  
+        /// 获取用户发布
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryUserPic(string userId)
+        {
+            DataTable dt = new BLL.handleTaste().queryUserPic(userId);
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<taste> list = new List<taste>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    list.Add(generateTaste(dt.Rows[i]));
+                }
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 获取用户其他发布
         /// <summary>  
         /// 获取用户其他发布
@@ -587,6 +628,7 @@ namespace culture_server.Controllers
             taste n = new taste();
             n.id = d["id"].ToString();
             n.tasteCover = util.generateImage(d["tasteCover"].ToString());
+            n.tasteTitle = d["tasteTitle"].ToString();
             n.tasteBrief = d["tasteBrief"].ToString();
             n.isLike = d.Table.Columns.Contains("isLike") ? Convert.ToInt32(d["isLike"].ToString()) : 0;
             n.likeNum = Convert.ToInt32(d["likeNum"].ToString());

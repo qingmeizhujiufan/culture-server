@@ -250,7 +250,7 @@ namespace culture_server.Controllers
                 Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
             };
         }
-        #endregion
+        #endregion     
 
         #region 私有方法集
         //返回user对象

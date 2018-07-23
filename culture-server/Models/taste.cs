@@ -9,6 +9,7 @@ namespace culture_server.Models
     {
         public string id { get; set; }
         public image tasteCover { get; set; }
+        public string tasteTitle { get; set; }
         public string tasteBrief { get; set; }
         public int isLike { get; set; }
         public int likeNum { get; set; }
