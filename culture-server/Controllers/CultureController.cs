@@ -326,6 +326,49 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 获取用户收藏文化
+        /// <summary>  
+        /// 获取用户收藏文化
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryUserCollectCulture(string userId)
+        {
+            DataTable dt = new BLL.handleCulture().queryUserCollectCulture(userId);
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<culture> list = new List<culture>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    list.Add(generateCulture(dt.Rows[i]));
+                }
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 获取评论列表
         /// <summary>  
         /// 获取评论列表 

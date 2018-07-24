@@ -326,6 +326,74 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 收藏艺术品
+        /// <summary>  
+        /// 收藏艺术品 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage collect(dynamic d)
+        {
+            Object data;
+            string userId = string.Empty;
+            if (d != null)
+            {
+                userId = d.userId;
+            }
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "请先登录再操作！"
+                };
+            }
+            else
+            {
+                try
+                {
+                    BLL.handleArt art = new BLL.handleArt();
+                    bool flag = art.collect(d);
+
+                    if (flag)
+                    {
+                        data = new
+                        {
+                            success = true
+                        };
+                    }
+                    else
+                    {
+                        data = new
+                        {
+                            success = false,
+                            backMsg = "操作失败，请重试！"
+
+                        };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "服务异常"
+
+                    };
+                }
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 是否设置艺术品为推荐
         /// <summary>  
         /// 是否设置艺术品为推荐 
@@ -390,6 +458,49 @@ namespace culture_server.Controllers
         public HttpResponseMessage queryRecommendTop3()
         {
             DataTable dt = new BLL.handleArt().queryRecommendTop3();
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<art> list = new List<art>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    list.Add(generateArt(dt.Rows[i]));
+                }
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 获取用户收藏艺术品
+        /// <summary>  
+        /// 获取用户收藏艺术品
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryUserCollectArt(string userId)
+        {
+            DataTable dt = new BLL.handleArt().queryUserCollectArt(userId);
             Object data;
             if (dt.Rows.Count >= 0)
             {

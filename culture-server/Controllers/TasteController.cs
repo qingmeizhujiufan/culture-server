@@ -523,6 +523,42 @@ namespace culture_server.Controllers
                 Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
             };
         }
+        #endregion      
+
+        #region 获取用户点赞总数
+        /// <summary>  
+        /// 获取用户点赞总数 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryLikeTotal(string userId)
+        {
+            Object data;
+            try
+            {
+                int total = new BLL.handleTaste().queryLikeTotal(userId);
+               
+            data = new
+            {
+                success = true,
+                total = total
+            };
+            }catch(Exception e){
+                data = new
+                {
+                    success = false,
+                    backMsg = "获取失败"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
         #endregion
 
         #region 获取评论列表
