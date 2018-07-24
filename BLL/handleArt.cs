@@ -195,6 +195,34 @@ namespace BLL
             }
         }
 
+        //收藏艺术品
+        public bool collect(dynamic d)
+        {
+            string str = @"declare @id uniqueidentifier, @userId uniqueidentifier, @isExist int
+
+                                set @id = '{0}';
+
+                                set @userId = '{1}';
+
+                                set @isExist = (select COUNT(id) from dbo.c_art_like where artId = @id and userId = @userId);
+
+                                if @isExist > 0
+
+                                     delete from dbo.c_art_like where artId = @id and userId = @userId
+
+                                else
+
+                                     begin
+
+                                          insert into dbo.c_art_like (artId, userId) values(@id, @userId)
+
+                                     end";
+            str = string.Format(str, d.artId, d.userId);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
         //是否设置艺术品为推荐
         public bool settingRecommend(dynamic d)
         { 
@@ -240,6 +268,38 @@ namespace BLL
                                 where n.state = 1 and n.isRecommend = 1
                                 order by n.update_time desc";
             str = string.Format(str);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
+        //获取用户收藏艺术品
+        public DataTable queryUserCollectArt(string userId)
+        {
+            string str = @"select   l.id,
+                                    n.cityId,
+                                    c.cityName,
+                                    artType,
+                                    artTitle,
+                                    artCover,
+                                    artAuthor,
+                                    ISNULL(artMoney, 0) artMoney,
+                                    buyUrl,
+                                    artBrief,
+                                    artContent,
+                                    state,
+                                    ISNULL(isRecommend, 0) isRecommend,
+                                    updator,
+                                    updatorName,
+                                    CONVERT(varchar(19), n.update_time, 120) as update_time,
+                                    CONVERT(varchar(19), n.create_time, 120) as create_time
+                                from dbo.c_art_like l
+                                left join dbo.c_art n
+                                on l.artId = n.id
+                                left join dbo.c_city c
+                                on n.cityId = c.id
+                                where l.userId = '{0}'";
+            str = string.Format(str, userId);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
             return dt;

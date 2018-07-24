@@ -184,6 +184,36 @@ namespace BLL
             }
         }
 
+        //获取用户收藏文化
+        public DataTable queryUserCollectCulture(string userId)
+        {
+            string str = @"select   l.id,
+                                    n.cityId,
+                                    c.cityName,
+                                    cultureType,
+                                    cultureTitle,
+                                    cultureCover,
+                                    cultureAuthor,
+                                    cultureBrief,
+                                    cultureContent,
+                                    state,
+                                    updator,
+                                    updatorName,
+                                    CONVERT(varchar(19), n.update_time, 120) as update_time,
+                                    creator,
+                                    CONVERT(varchar(19), n.create_time, 120) as create_time
+                                from dbo.c_culture_like l
+                                left join dbo.c_culture n
+                                on l.cultureId = n.id
+                                left join dbo.c_city c
+                                on n.cityId = c.id
+                                where l.userId = '{0}'";
+            str = string.Format(str, userId);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
         //查询评论信息
         public DataTable queryCommentList(string cultureId)
         {

@@ -357,6 +357,16 @@ namespace BLL
             return dt;
         }
 
+        public int queryLikeTotal(string userId)
+        {
+            string str = @"select count(id) as total from dbo.c_taste_like where userId='{0}'";
+            str = string.Format(str, userId);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+            int total = Convert.ToInt32(dt.Rows[0]["total"]);
+
+            return total;
+        }
+
         //查询评论信息
         public DataTable queryCommentList(string tasteId)
         {
