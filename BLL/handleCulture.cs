@@ -158,6 +158,17 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
+        //删除用户收藏的文化
+        public bool delete2(dynamic d)
+        {
+            string id = d.id;
+            string str = @"delete dbo.c_culture_like where id='{0}'";
+            str = string.Format(str, id);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
         //审核文化   return   0: 未找到文化； 1: 审核成功； 2: 审核失败; -1: 不允许审核;
         public int review(dynamic d)
         {
