@@ -197,7 +197,6 @@ namespace culture_server.Controllers
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
-        [SupportFilter]
         [AcceptVerbs("OPTIONS", "POST")]
         public HttpResponseMessage delete(dynamic d)
         {
@@ -647,13 +646,13 @@ namespace culture_server.Controllers
             n.artAuthor = d["artAuthor"].ToString();
             n.artBrief = d["artBrief"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
+            n.isCollect = Convert.ToInt32(d["isCollect"].ToString());
             n.isRecommend = Convert.ToInt32(d["isRecommend"].ToString());
             n.updator = d["updator"].ToString();
             n.updatorName = d["updatorName"].ToString();
             n.update_time = d["update_time"].ToString();
             n.creator = d["creator"].ToString();
             n.creatorName = d["creatorName"].ToString();
-            n.typeName = d["typeName"].ToString();
             n.create_time = d["create_time"].ToString();
 
             return n;

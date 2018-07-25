@@ -197,18 +197,16 @@ namespace culture_server.Controllers
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
-        [SupportFilter]
         [AcceptVerbs("OPTIONS", "POST")]
         public HttpResponseMessage delete(dynamic d)
         {
-            string id = d.id;
             object data = new object();
             try
             {
                 BLL.handleCulture culture = new BLL.handleCulture();
                 bool flag = false;
 
-                flag = culture.delete(id);
+                flag = culture.delete(d);
 
                 if (flag)
                 {
@@ -222,7 +220,7 @@ namespace culture_server.Controllers
                     data = new
                     {
                         success = false,
-                        backMsg = "删除新闻信息失败"
+                        backMsg = "删除失败"
 
                     };
                 }
@@ -315,6 +313,74 @@ namespace culture_server.Controllers
                     backMsg = "服务异常"
 
                 };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 收藏文化
+        /// <summary>  
+        /// 收藏文化 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage collect(dynamic d)
+        {
+            Object data;
+            string userId = string.Empty;
+            if (d != null)
+            {
+                userId = d.userId;
+            }
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "请先登录再操作！"
+                };
+            }
+            else
+            {
+                try
+                {
+                    BLL.handleCulture culture = new BLL.handleCulture();
+                    bool flag = culture.collect(d);
+
+                    if (flag)
+                    {
+                        data = new
+                        {
+                            success = true
+                        };
+                    }
+                    else
+                    {
+                        data = new
+                        {
+                            success = false,
+                            backMsg = "操作失败，请重试！"
+
+                        };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "服务异常"
+
+                    };
+                }
             }
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -480,6 +546,7 @@ namespace culture_server.Controllers
             n.cultureAuthor = d["cultureAuthor"].ToString();
             n.cultureBrief = d["cultureBrief"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
+            n.isCollect = Convert.ToInt32(d["isCollect"].ToString());
             n.updator = d["updator"].ToString();
             n.updatorName = d["updatorName"].ToString();
             n.update_time = d["update_time"].ToString();

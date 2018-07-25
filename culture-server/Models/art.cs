@@ -19,6 +19,7 @@ namespace culture_server.Models
         public string artBrief { set; get; }
         public List<image> artContent { set; get; }
         public int state { set; get; }
+        public int isCollect { set; get; }
         public int isRecommend { set; get; }
         public string updator { set; get; }
         public string updatorName { set; get; }
