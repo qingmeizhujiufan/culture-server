@@ -531,6 +531,59 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 删除用户收藏的文化
+        /// <summary>  
+        /// 删除用户收藏的文化
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage delete2(dynamic d)
+        {
+            object data = new object();
+            try
+            {
+                BLL.handleCulture culture = new BLL.handleCulture();
+                bool flag = false;
+
+                flag = culture.delete2(d);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "删除失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 私有方法集
         //返回culture对象
         private culture generateCulture(dynamic d)
