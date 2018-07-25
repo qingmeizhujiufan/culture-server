@@ -27,6 +27,7 @@ namespace BLL
                                     cultureBrief,
                                     cultureContent,
                                     state,
+                                    (select COUNT(*) from dbo.c_culture_like l where n.id = l.cultureId) as isCollect,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -43,7 +44,7 @@ namespace BLL
                                 where state = 1 and cultureTitle like '%{2}%'";
             str += conditionCity;
             str += @")
-                            select id, cityId, cityName, cultureType, cultureTitle, cultureCover, cultureAuthor, cultureBrief, cultureContent, state, updator, updatorName, update_time,creator, creatorName, typeName, create_time from CulturePage
+                            select id, cityId, cityName, cultureType, cultureTitle, cultureCover, cultureAuthor, cultureBrief, cultureContent, state, isCollect, updator, updatorName, update_time,creator, creatorName, typeName, create_time from CulturePage
                             where RowNumber > @Start AND RowNumber <= @End
                             ORDER BY create_time desc";
             str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText, cityId);
@@ -65,6 +66,7 @@ namespace BLL
                                     cultureBrief,
                                     cultureContent,
                                     state,
+                                    (select COUNT(*) from dbo.c_culture_like l where n.id = l.cultureId) as isCollect,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -96,6 +98,7 @@ namespace BLL
                                     cultureBrief,
                                     cultureContent,
                                     state,
+                                    (select COUNT(*) from dbo.c_culture_like l where n.id = l.cultureId) as isCollect,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -145,8 +148,9 @@ namespace BLL
         }
 
         //删除文化
-        public bool delete(string id)
+        public bool delete(dynamic d)
         {
+            string id = d.id;
             string str = @"delete dbo.c_culture where id='{0}'";
             str = string.Format(str, id);
             int flag = DBHelper.SqlHelper.ExecuteSql(str);
@@ -184,6 +188,34 @@ namespace BLL
             }
         }
 
+        //收藏文化
+        public bool collect(dynamic d)
+        {
+            string str = @"declare @id uniqueidentifier, @userId uniqueidentifier, @isExist int
+
+                                set @id = '{0}';
+
+                                set @userId = '{1}';
+
+                                set @isExist = (select COUNT(id) from dbo.c_culture_like where cultureId = @id and userId = @userId);
+
+                                if @isExist > 0
+
+                                     delete from dbo.c_culture_like where cultureId = @id and userId = @userId
+
+                                else
+
+                                     begin
+
+                                          insert into dbo.c_culture_like (cultureId, userId) values(@id, @userId)
+
+                                     end";
+            str = string.Format(str, d.cultureId, d.userId);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
         //获取用户收藏文化
         public DataTable queryUserCollectCulture(string userId)
         {
@@ -210,6 +242,15 @@ namespace BLL
                                 where l.userId = '{0}'";
             str = string.Format(str, userId);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+            //添加一新列，其值为默认值
+            DataColumn dc = new DataColumn("isCollect", typeof(int));
+            dc.DefaultValue = 1;
+            DataColumn dc2 = new DataColumn("creatorName", typeof(string));
+            DataColumn dc3 = new DataColumn("typeName", typeof(string));
+
+            dt.Columns.Add(dc);
+            dt.Columns.Add(dc2);
+            dt.Columns.Add(dc3);
 
             return dt;
         }

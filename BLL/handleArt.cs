@@ -29,6 +29,7 @@ namespace BLL
                                     artBrief,
                                     artContent,
                                     state,
+                                    (select COUNT(*) from dbo.c_art_like l where n.id = l.artId) as isCollect,
                                     ISNULL(isRecommend, 0) isRecommend,
                                     updator,
                                     updatorName,
@@ -46,7 +47,7 @@ namespace BLL
                                 where state = 1 and artTitle like '%{2}%'";
             str += conditionCity;
             str += @")
-                            select id, cityId, cityName, artType, artTitle, artCover, artAuthor, artMoney, buyUrl, artBrief, artContent, state, isRecommend, updator, updatorName, update_time,creator, creatorName, typeName, create_time from ArtPage
+                            select id, cityId, cityName, artType, artTitle, artCover, artAuthor, artMoney, buyUrl, artBrief, artContent, state, isCollect, isRecommend, updator, updatorName, update_time,creator, creatorName, typeName, create_time from ArtPage
                             where RowNumber > @Start AND RowNumber <= @End
                             ORDER BY create_time desc";
             str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText, cityId);
@@ -70,6 +71,7 @@ namespace BLL
                                     artBrief,
                                     artContent,
                                     state,
+                                    (select COUNT(*) from dbo.c_art_like l where n.id = l.artId) as isCollect,
                                     ISNULL(isRecommend, 0) isRecommend,
                                     updator,
                                     updatorName,
@@ -104,6 +106,7 @@ namespace BLL
                                     artBrief,
                                     artContent,
                                     state,
+                                    (select COUNT(*) from dbo.c_art_like l where n.id = l.artId) as isCollect,
                                     ISNULL(isRecommend, 0) isRecommend,
                                     updator,
                                     updatorName,
@@ -252,6 +255,7 @@ namespace BLL
                                     artBrief,
                                     artContent,
                                     state,
+                                    (select COUNT(*) from dbo.c_art_like l where n.id = l.artId) as isCollect,
                                     ISNULL(isRecommend, 0) isRecommend,
                                     updator,
                                     updatorName,
@@ -301,6 +305,15 @@ namespace BLL
                                 where l.userId = '{0}'";
             str = string.Format(str, userId);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+            //添加一新列，其值为默认值
+            DataColumn dc = new DataColumn("isCollect", typeof(int));
+            dc.DefaultValue = 1;
+            DataColumn dc2 = new DataColumn("creator", typeof(string));
+            DataColumn dc3 = new DataColumn("creatorName", typeof(string));
+
+            dt.Columns.Add(dc);
+            dt.Columns.Add(dc2);
+            dt.Columns.Add(dc3);
 
             return dt;
         }
