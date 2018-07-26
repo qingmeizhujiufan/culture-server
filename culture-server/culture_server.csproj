@@ -170,6 +170,7 @@
     <Compile Include="Controllers\CityController.cs" />
     <Compile Include="Controllers\CultureController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\OrganizeController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Models\culture.cs" />
     <Compile Include="Models\cultureComment.cs" />
     <Compile Include="Models\image.cs" />
+    <Compile Include="Models\message.cs" />
     <Compile Include="Models\news.cs" />
     <Compile Include="Models\organize.cs" />
     <Compile Include="Models\taste.cs" />
