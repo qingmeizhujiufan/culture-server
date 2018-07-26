@@ -184,8 +184,10 @@ namespace BLL
                 {
                     str = @"update dbo.c_taste set 
                                 state={1}
-                                where id='{0}'";
-                    str = string.Format(str, d.id, d.state);
+                                where id='{0}';
+                            insert into dbo.c_message (receiver, messageTitle, messageContent, type)
+                            values('{2}', '{3}', '{4}', {5})";
+                    str = string.Format(str, d.id, d.state, d.creator, "审核进度", d.state == 1 ? "恭喜！您的最新美图发布已审核通过。" : "抱歉！您的最新美图发布审核未不合格，请重新发布。", 1);
                     int flag = DBHelper.SqlHelper.ExecuteSql(str);
                     if (flag > 0) return 1;
                     else return 2;

@@ -49,6 +49,7 @@
     <Compile Include="handleCity.cs" />
     <Compile Include="handleCulture.cs" />
     <Compile Include="handleImage.cs" />
+    <Compile Include="handleMessage.cs" />
     <Compile Include="handleNews.cs" />
     <Compile Include="handleOrganize.cs" />
     <Compile Include="handleTaste.cs" />

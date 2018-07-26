@@ -168,6 +168,17 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
+        //删除用户收藏的艺术品
+        public bool delete2(dynamic d)
+        {
+            string id = d.id;
+            string str = @"delete dbo.c_art_like where id='{0}'";
+            str = string.Format(str, id);
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
         //审核艺术品   return   0: 未找到艺术品； 1: 审核成功； 2: 审核失败; -1: 不允许审核;
         public int review(dynamic d)
         {
