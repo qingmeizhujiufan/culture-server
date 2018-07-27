@@ -176,6 +176,7 @@
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\TasteController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Core\SupportFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -194,6 +195,7 @@
     <Compile Include="Models\tasteComment.cs" />
     <Compile Include="Models\user.cs" />
     <Compile Include="Models\userCount.cs" />
+    <Compile Include="Models\video.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\util.cs" />
   </ItemGroup>
