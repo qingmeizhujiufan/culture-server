@@ -27,6 +27,7 @@ namespace BLL
                                     newsBrief,
                                     newsContent,
                                     state,
+                                    (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -43,7 +44,7 @@ namespace BLL
                                 where state = 1 and newsTitle like '%{2}%'";
             str += conditionCity;
             str += @")
-                            select id, cityId, cityName, newsType, newsTitle, newsCover, newsAuthor, newsBrief, newsContent, state, updator, updatorName, update_time,creator, creatorName, typeName, create_time from NewsPage
+                            select id, cityId, cityName, newsType, newsTitle, newsCover, newsAuthor, newsBrief, newsContent, state, readNum, updator, updatorName, update_time,creator, creatorName, typeName, create_time from NewsPage
                             where RowNumber > @Start AND RowNumber <= @End
                             ORDER BY create_time desc";
             str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText, cityId);
@@ -65,6 +66,7 @@ namespace BLL
                                     newsBrief,
                                     newsContent,
                                     state,
+                                    (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -96,6 +98,7 @@ namespace BLL
                                     newsBrief,
                                     newsContent,
                                     state,
+                                    (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,

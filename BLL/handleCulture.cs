@@ -27,6 +27,7 @@ namespace BLL
                                     cultureBrief,
                                     cultureContent,
                                     state,
+                                    (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     (select COUNT(*) from dbo.c_culture_like l where n.id = l.cultureId) as isCollect,
                                     updator,
                                     updatorName,
@@ -44,7 +45,7 @@ namespace BLL
                                 where state = 1 and cultureTitle like '%{2}%'";
             str += conditionCity;
             str += @")
-                            select id, cityId, cityName, cultureType, cultureTitle, cultureCover, cultureAuthor, cultureBrief, cultureContent, state, isCollect, updator, updatorName, update_time,creator, creatorName, typeName, create_time from CulturePage
+                            select id, cityId, cityName, cultureType, cultureTitle, cultureCover, cultureAuthor, cultureBrief, cultureContent, state, readNum, isCollect, updator, updatorName, update_time,creator, creatorName, typeName, create_time from CulturePage
                             where RowNumber > @Start AND RowNumber <= @End
                             ORDER BY create_time desc";
             str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText, cityId);
@@ -66,6 +67,7 @@ namespace BLL
                                     cultureBrief,
                                     cultureContent,
                                     state,
+                                    (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     (select COUNT(*) from dbo.c_culture_like l where n.id = l.cultureId) as isCollect,
                                     updator,
                                     updatorName,
@@ -98,6 +100,7 @@ namespace BLL
                                     cultureBrief,
                                     cultureContent,
                                     state,
+                                    (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     (select COUNT(*) from dbo.c_culture_like l where n.id = l.cultureId) as isCollect,
                                     updator,
                                     updatorName,
@@ -240,6 +243,8 @@ namespace BLL
                                     cultureBrief,
                                     cultureContent,
                                     state,
+                                    (select COUNT(id) from dbo.c_culture_like where n.id = cultureId) as likeNum,
+                                    (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,

@@ -12,60 +12,16 @@ namespace BLL
 {
     public class Common
     {
-        /// <summary>
-        /// 判断管理员是否登陆
-        /// </summary>
-        /// <returns></returns>
-        public bool IsAdminLogin()
-        {
-            bool bRtn = true;
-
-            if (HttpContext.Current.Session["admin_id"] == null)
+        //插入阅读情况
+        public void insertRead(string viewId){
+            try
             {
-                bRtn = false;
-            }
+                string str = @"insert into dbo.c_read (viewId) values('{0}')";
+                str = string.Format(str, viewId);
+                DBHelper.SqlHelper.ExecuteSql(str);
+            }catch(Exception e) {
 
-            return bRtn;
+            }       
         }
-
-        /// <summary>
-        /// 判断用户是否登陆
-        /// </summary>
-        /// <returns></returns>
-        public bool IsUserLogin()
-        {
-            bool bRtn = true;
-
-            if (HttpContext.Current.Session["user_openid"] == null)
-            {
-                bRtn = false;
-            }
-
-            return bRtn;
-        }
-
-        /// <summary>
-        /// 获取当前登陆用户id
-        /// </summary>
-        /// <returns></returns>
-        public string GetCurrentUserID()
-        {
-            string strID = string.Empty;
-
-            if (HttpContext.Current.Session["user_openid"] != null)
-            {
-                strID = HttpContext.Current.Session["user_openid"].ToString();
-            }
-
-            return strID;
-        }
-
-        public string CreateOrderNo()
-        {
-            string strRtn = string.Empty;
-            strRtn = CommonTool.Common.CreateOrderNo("tree");
-            return strRtn;
-        }
-
     }
 }

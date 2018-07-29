@@ -19,10 +19,11 @@ namespace BLL
                             (select   n.id,
                                     videoFile,
                                     videoTitle,
+                                    videoSubTitle,
                                     videoCover,
-                                    videoAuthor,
                                     videoBrief,
                                     state,
+                                    (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -36,7 +37,7 @@ namespace BLL
                                 on n.creator = a.id
                                 where state = 1 and videoTitle like '%{2}%'
                             )
-                            select id, videoFile, videoTitle, videoCover, videoAuthor, artBrief, state, updator, updatorName, update_time,creator, creatorName, typeName, create_time from VideoPage
+                            select id, videoFile, videoTitle, videoSubTitle, videoCover, videoBrief, state, readNum, updator, updatorName, update_time,creator, creatorName, typeName, create_time from VideoPage
                             where RowNumber > @Start AND RowNumber <= @End
                             ORDER BY create_time desc";
             str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText);
@@ -51,10 +52,11 @@ namespace BLL
             string str = @"select   n.id,
                                     videoFile,
                                     videoTitle,
+                                    videoSubTitle,
                                     videoCover,
-                                    videoAuthor,
                                     videoBrief,
                                     state,
+                                    (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -77,10 +79,11 @@ namespace BLL
             string str = @"select   n.id,
                                     videoFile,
                                     videoTitle,
+                                    videoSubTitle,
                                     videoCover,
-                                    videoAuthor,
                                     videoBrief,
                                     state,
+                                    (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -106,20 +109,19 @@ namespace BLL
             string id = d.id;
             if (string.IsNullOrEmpty(id))
             {
-                str = @"insert into dbo.c_video (videoFile, videoTitle, videoCover, videoAuthor, videoBrief, state, creator)
-                                values ('{0}', '{1}', '{2}', '{3}', '{4}', 0, '{5}', {6}, '{7}')";
-                str = string.Format(str, d.videoFile, d.videoTitle, d.videoCover, d.videoAuthor, d.videoBrief, d.creator);
+                str = @"insert into dbo.c_video (videoFile, videoTitle, videoCover, videoBrief, state, creator)
+                                values ('{0}', '{1}', '{2}', '{3}', 0, '{4}')";
+                str = string.Format(str, d.videoFile, d.videoTitle, d.videoCover, d.videoBrief, d.creator);
             }
             else
             {
                 str = @"update dbo.c_video set 
                                 videoFile='{1}',
                                 videoTitle='{2}', 
-                                videoCover='{3}', 
-                                videoAuthor='{4}', 
-                                videoBrief='{5}'
+                                videoCover='{3}',  
+                                videoBrief='{4}'
                                 where id='{0}'";
-                str = string.Format(str, d.id, d.videoFile, d.videoTitle, d.videoCover, d.videoAuthor, d.videoBrief);
+                str = string.Format(str, d.id, d.videoFile, d.videoTitle, d.videoCover, d.videoBrief);
             }
 
             flag = DBHelper.SqlHelper.ExecuteSql(str);
@@ -137,18 +139,7 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
-        //删除用户收藏的艺术品
-        public bool delete2(dynamic d)
-        {
-            string id = d.id;
-            string str = @"delete dbo.c_art_like where id='{0}'";
-            str = string.Format(str, id);
-            int flag = DBHelper.SqlHelper.ExecuteSql(str);
-
-            return flag > 0 ? true : false;
-        }
-
-        //审核艺术品   return   0: 未找到艺术品； 1: 审核成功； 2: 审核失败; -1: 不允许审核;
+        //审核视频   return   0: 未找到视频； 1: 审核成功； 2: 审核失败; -1: 不允许审核;
         public int review(dynamic d)
         {
             string str = string.Empty;
@@ -159,7 +150,7 @@ namespace BLL
                 int state = Convert.ToInt32(dt.Rows[0]["state"].ToString());
                 if (state == 0)
                 {
-                    str = @"update dbo.c_art set 
+                    str = @"update dbo.c_video set 
                                 state=1
                                 where id='{0}'";
                     str = string.Format(str, d.id);
