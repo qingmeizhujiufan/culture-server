@@ -15,6 +15,7 @@ namespace culture_server.Models
         public string videoAuthor { set; get; }
         public string videoBrief { set; get; }
         public int state { set; get; }
+        public int readNum { set; get; }
         public string updator { set; get; }
         public string updatorName { set; get; }
         public string update_time { set; get; }

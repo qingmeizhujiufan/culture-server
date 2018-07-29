@@ -17,6 +17,8 @@ namespace culture_server.Models
         public string cultureBrief { set; get; }
         public string cultureContent { set; get; }
         public int state { set; get; }
+        public int likeNum { set; get; }
+        public int readNum { set; get; }
         public int isCollect { set; get; }
         public string updator { set; get; }
         public string updatorName { set; get; }

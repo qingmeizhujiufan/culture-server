@@ -66,7 +66,7 @@ namespace culture_server.Controllers
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage queryListByAdmin(dynamic d)
         {
-            DataTable dt = new BLL.handleArt().queryListByAdmin();
+            DataTable dt = new BLL.handleVideo().queryListByAdmin();
             Object data;
             if (dt.Rows.Count >= 0)
             {
@@ -100,16 +100,17 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 获取艺术信息详情
+        #region 获取视频详情
         /// <summary>  
-        /// 获取艺术信息详情 
+        /// 获取视频详情 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage queryDetail(string id)
         {
-            DataTable dt = new BLL.handleArt().queryDetail(id);
+            new BLL.Common().insertRead(id);
+            DataTable dt = new BLL.handleVideo().queryDetail(id);
             Object data;
             if (dt.Rows.Count == 1)
             {
@@ -137,9 +138,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 更新或者新增艺术信息
+        #region 更新或者新增视频信息
         /// <summary>  
-        /// 更新或者新增艺术信息 
+        /// 更新或者新增视频信息 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -151,9 +152,9 @@ namespace culture_server.Controllers
 
             try
             {
-                BLL.handleArt culture = new BLL.handleArt();
+                BLL.handleVideo video = new BLL.handleVideo();
                 bool flag = false;
-                flag = culture.saveAP(d);
+                flag = video.saveAP(d);
 
                 if (flag)
                 {
@@ -191,9 +192,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 删除艺术
+        #region 删除视频
         /// <summary>  
-        /// 删除艺术
+        /// 删除视频
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -204,10 +205,10 @@ namespace culture_server.Controllers
             object data = new object();
             try
             {
-                BLL.handleArt culture = new BLL.handleArt();
+                BLL.handleVideo video = new BLL.handleVideo();
                 bool flag = false;
 
-                flag = culture.delete(id);
+                flag = video.delete(id);
 
                 if (flag)
                 {
@@ -221,7 +222,7 @@ namespace culture_server.Controllers
                     data = new
                     {
                         success = false,
-                        backMsg = "删除新闻信息失败"
+                        backMsg = "删除失败"
 
                     };
                 }
@@ -245,9 +246,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 审核艺术品
+        #region 审核视频
         /// <summary>  
-        /// 审核艺术品 
+        /// 审核视频 
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -259,8 +260,8 @@ namespace culture_server.Controllers
 
             try
             {
-                BLL.handleArt art = new BLL.handleArt();
-                int flag = art.review(d);
+                BLL.handleVideo video = new BLL.handleVideo();
+                int flag = video.review(d);
 
                 if (flag == 1)
                 {
@@ -292,7 +293,7 @@ namespace culture_server.Controllers
                     data = new
                     {
                         success = false,
-                        backMsg = "艺术品不存在"
+                        backMsg = "视频不存在"
 
                     };
                 }
@@ -331,13 +332,13 @@ namespace culture_server.Controllers
         {
             video n = new video();
             n.id = d["id"].ToString();
-            n.videoFile = util.generateListImage(d["fileId"].ToString());  
+            n.videoFile = util.generateImage(d["videoFile"].ToString());  
             n.videoTitle = d["videoTitle"].ToString();
             n.videoSubTitle = d["videoSubTitle"].ToString();
-            n.videoCover = util.generateListImage(d["videoCover"].ToString());
-            n.videoAuthor = d["videoAuthor"].ToString();
+            n.videoCover = util.generateImage(d["videoCover"].ToString());
             n.videoBrief = d["videoBrief"].ToString();                             
             n.state = Convert.ToInt32(d["state"].ToString());
+            n.readNum = Convert.ToInt32(d["readNum"].ToString());
             n.updator = d["updator"].ToString();
             n.updatorName = d["updatorName"].ToString();
             n.update_time = d["update_time"].ToString();

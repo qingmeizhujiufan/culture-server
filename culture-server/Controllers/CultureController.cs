@@ -109,6 +109,7 @@ namespace culture_server.Controllers
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage queryDetail(string id)
         {
+            new BLL.Common().insertRead(id);
             DataTable dt = new BLL.handleCulture().queryDetail(id);
             Object data;
             if (dt.Rows.Count == 1)
@@ -117,7 +118,7 @@ namespace culture_server.Controllers
                 {
                     success = true,
                     backData = generateCulture(dt.Rows[0])
-                };
+                };                
             }
             else
             {
@@ -599,6 +600,7 @@ namespace culture_server.Controllers
             n.cultureAuthor = d["cultureAuthor"].ToString();
             n.cultureBrief = d["cultureBrief"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
+            n.readNum = Convert.ToInt32(d["readNum"].ToString());
             n.isCollect = Convert.ToInt32(d["isCollect"].ToString());
             n.updator = d["updator"].ToString();
             n.updatorName = d["updatorName"].ToString();

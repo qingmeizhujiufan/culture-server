@@ -109,6 +109,7 @@ namespace culture_server.Controllers
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage queryDetail(string id)
         {
+            new BLL.Common().insertRead(id);
             DataTable dt = new BLL.handleArt().queryDetail(id);
             Object data;
             if (dt.Rows.Count == 1)
@@ -117,7 +118,7 @@ namespace culture_server.Controllers
                 {
                     success = true,
                     backData = generateArt(dt.Rows[0])
-                };
+                };              
             }
             else
             {
@@ -699,6 +700,7 @@ namespace culture_server.Controllers
             n.artAuthor = d["artAuthor"].ToString();
             n.artBrief = d["artBrief"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
+            n.readNum = Convert.ToInt32(d["readNum"].ToString());
             n.isCollect = Convert.ToInt32(d["isCollect"].ToString());
             n.isRecommend = Convert.ToInt32(d["isRecommend"].ToString());
             n.updator = d["updator"].ToString();

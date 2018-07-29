@@ -109,6 +109,7 @@ namespace culture_server.Controllers
         [AcceptVerbs("OPTIONS", "GET")]
         public HttpResponseMessage queryDetail(string id)
         {
+            new BLL.Common().insertRead(id);
             DataTable dt = new BLL.handleNews().queryDetail(id);
             Object data;
             if (dt.Rows.Count == 1)
@@ -117,7 +118,7 @@ namespace culture_server.Controllers
                 {
                     success = true,
                     backData = generateNews(dt.Rows[0])
-                };
+                };                
             }
             else
             {
@@ -127,7 +128,7 @@ namespace culture_server.Controllers
                     backMsg = "数据异常"
                 };
             }
-
+            
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             string json = serializer.Serialize(data);
             return new HttpResponseMessage
@@ -341,6 +342,7 @@ namespace culture_server.Controllers
             n.newsAuthor = d["newsAuthor"].ToString();
             n.newsBrief = d["newsBrief"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
+            n.readNum = Convert.ToInt32(d["readNum"].ToString());
             n.updator = d["updator"].ToString();
             n.updatorName = d["updatorName"].ToString();
             n.update_time = d["update_time"].ToString();
