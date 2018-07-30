@@ -28,7 +28,7 @@ namespace BLL
                                     cultureContent,
                                     state,
                                     (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
-                                    (select COUNT(*) from dbo.c_culture_like l where n.id = l.cultureId) as isCollect,
+                                    (select COUNT(*) from dbo.c_culture_like where n.id = cultureId) as collectNum,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -45,7 +45,7 @@ namespace BLL
                                 where state = 1 and cultureTitle like '%{2}%'";
             str += conditionCity;
             str += @")
-                            select id, cityId, cityName, cultureType, cultureTitle, cultureCover, cultureAuthor, cultureBrief, cultureContent, state, readNum, isCollect, updator, updatorName, update_time,creator, creatorName, typeName, create_time from CulturePage
+                            select id, cityId, cityName, cultureType, cultureTitle, cultureCover, cultureAuthor, cultureBrief, cultureContent, state, readNum, collectNum, updator, updatorName, update_time,creator, creatorName, typeName, create_time from CulturePage
                             where RowNumber > @Start AND RowNumber <= @End
                             ORDER BY create_time desc";
             str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText, cityId);
@@ -68,7 +68,7 @@ namespace BLL
                                     cultureContent,
                                     state,
                                     (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
-                                    (select COUNT(*) from dbo.c_culture_like l where n.id = l.cultureId) as isCollect,
+                                    (select COUNT(*) from dbo.c_culture_like where n.id = cultureId) as collectNum,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -101,7 +101,7 @@ namespace BLL
                                     cultureContent,
                                     state,
                                     (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
-                                    (select COUNT(*) from dbo.c_culture_like l where n.id = l.cultureId) as isCollect,
+                                    (select COUNT(*) from dbo.c_culture_like where n.id = cultureId) as collectNum,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -259,7 +259,7 @@ namespace BLL
             str = string.Format(str, userId);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
             //添加一新列，其值为默认值
-            DataColumn dc = new DataColumn("isCollect", typeof(int));
+            DataColumn dc = new DataColumn("collectNum", typeof(int));
             dc.DefaultValue = 1;
             DataColumn dc2 = new DataColumn("creatorName", typeof(string));
             DataColumn dc3 = new DataColumn("typeName", typeof(string));
