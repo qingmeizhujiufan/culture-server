@@ -701,7 +701,7 @@ namespace culture_server.Controllers
             n.artBrief = d["artBrief"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
             n.readNum = Convert.ToInt32(d["readNum"].ToString());
-            n.isCollect = Convert.ToInt32(d["isCollect"].ToString());
+            n.collectNum = Convert.ToInt32(d["collectNum"].ToString());
             n.isRecommend = Convert.ToInt32(d["isRecommend"].ToString());
             n.updator = d["updator"].ToString();
             n.updatorName = d["updatorName"].ToString();
