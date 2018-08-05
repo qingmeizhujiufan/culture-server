@@ -187,6 +187,7 @@
     <Compile Include="Models\city.cs" />
     <Compile Include="Models\culture.cs" />
     <Compile Include="Models\cultureComment.cs" />
+    <Compile Include="Models\homeCulture.cs" />
     <Compile Include="Models\image.cs" />
     <Compile Include="Models\message.cs" />
     <Compile Include="Models\news.cs" />

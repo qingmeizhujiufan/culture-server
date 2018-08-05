@@ -1,4 +1,7 @@
-﻿using System;
+﻿using culture_server.Core;
+using culture_server.Models;
+using culture_server.Util;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -143,6 +146,116 @@ namespace culture_server.Controllers
             {
                 Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
             };
+        }
+        #endregion
+
+        #region 获取首页文化展示轮播图详情
+        /// <summary>  
+        /// 获取首页文化展示轮播图详情 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryHomeCulutreDetail()
+        {
+            DataTable dt = new BLL.Common().queryHomeCulutreDetail();
+            Object data;
+            if (dt.Rows.Count == 1)
+            {
+                data = new
+                {
+                    success = true,
+                    backData = generateHomeCulture(dt.Rows[0])
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 首页文化展示轮播图保存
+        /// <summary>  
+        /// 首页文化展示轮播图保存 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage saveHomeSlider(dynamic d)
+        {
+            Object data;
+
+            try
+            {
+                BLL.Common common = new BLL.Common();
+                bool flag = false;
+                flag = common.saveHomeSlider(d);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "保存信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 私有方法集
+        //返回homeCulture对象
+        private homeCulture generateHomeCulture(dynamic d)
+        {
+            homeCulture t = new homeCulture();
+            t.slider_1 = util.generateImage(d["slider_1"].ToString());
+            t.slider_2 = util.generateImage(d["slider_2"].ToString());
+            t.slider_3 = util.generateImage(d["slider_3"].ToString());
+            t.slider_4 = util.generateImage(d["slider_4"].ToString());
+            t.slider_5 = util.generateImage(d["slider_5"].ToString());
+            t.slider_6 = util.generateImage(d["slider_6"].ToString());
+            t.slider_7 = util.generateImage(d["slider_7"].ToString());
+            t.slider_8 = util.generateImage(d["slider_8"].ToString());
+            t.slider_9 = util.generateImage(d["slider_9"].ToString());
+
+            return t;
         }
         #endregion
     }
