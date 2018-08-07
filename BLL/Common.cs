@@ -66,5 +66,19 @@ namespace BLL
 
             return flag > 0 ? true : false;
         }
+
+        public DataTable getWebTotal()
+        {
+            string str = @"select COUNT(*) from dbo.c_user
+                            union all
+                            select COUNT(*) from dbo.c_taste
+                            union all
+                            select COUNT(*) from dbo.c_video
+                            union all
+                            select COUNT(*) from dbo.c_art";
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
     }
 }
