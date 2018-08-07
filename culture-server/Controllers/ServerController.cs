@@ -258,11 +258,55 @@ namespace culture_server.Controllers
                 {
                     success = true,
                     backData = new {
-                        userTotal = dt.Rows[0][0],
-                        tasteTotal = dt.Rows[1][0],
-                        videoTotal = dt.Rows[2][0],
-                        artTotal = dt.Rows[3][0]
+                        cultureTotal = dt.Rows[0][0],
+                        artTotal = dt.Rows[1][0],
+                        tasteTotal = dt.Rows[2][0],
+                        videoTotal = dt.Rows[3][0]
                     }                  
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 文化，艺术品，新闻浏览分布统计
+        /// <summary>  
+        /// 文化，艺术品，新闻浏览分布统计
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage countCAN()
+        {
+            DataTable dt = new BLL.Common().countCAN();
+            Object data;
+            if (dt.Rows.Count > 0)
+            {
+                data = new
+                {
+                    success = true,
+                    backData = new
+                    {
+                        cultureTotal = dt.Rows[0][0],
+                        artTotal = dt.Rows[1][0],
+                        newsTotal = dt.Rows[2][0],
+                        videoTotal = dt.Rows[3][0]
+                    }
                 };
             }
             else
