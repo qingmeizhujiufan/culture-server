@@ -240,6 +240,49 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 总量统计
+        /// <summary>  
+        /// 总量统计
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage getWebTotal()
+        {
+            DataTable dt = new BLL.Common().getWebTotal();
+            Object data;
+            if (dt.Rows.Count > 0)
+            {
+                data = new
+                {
+                    success = true,
+                    backData = new {
+                        userTotal = dt.Rows[0][0],
+                        tasteTotal = dt.Rows[1][0],
+                        videoTotal = dt.Rows[2][0],
+                        artTotal = dt.Rows[3][0]
+                    }                  
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 私有方法集
         //返回homeCulture对象
         private homeCulture generateHomeCulture(dynamic d)
