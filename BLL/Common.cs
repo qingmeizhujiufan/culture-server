@@ -67,15 +67,31 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
+        //总量统计
         public DataTable getWebTotal()
         {
-            string str = @"select COUNT(*) from dbo.c_user
+            string str = @"select COUNT(*) from dbo.c_culture
+                            union all
+                            select COUNT(*) from dbo.c_art
                             union all
                             select COUNT(*) from dbo.c_taste
                             union all
-                            select COUNT(*) from dbo.c_video
+                            select COUNT(*) from dbo.c_video";
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
+        //文化，艺术品，新闻浏览分布统计
+        public DataTable countCAN()
+        {
+            string str = @"select COUNT(*) from dbo.c_read where viewId in(select id from dbo.c_culture)
                             union all
-                            select COUNT(*) from dbo.c_art";
+                            select COUNT(*) from dbo.c_read where viewId in(select id from dbo.c_art)
+                            union all
+                            select COUNT(*) from dbo.c_read where viewId in(select id from dbo.c_news)
+                            union all
+                            select COUNT(*) from dbo.c_read where viewId in(select id from dbo.c_video)";
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
             return dt;
