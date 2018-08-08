@@ -67,6 +67,30 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
+        //获取背景音乐
+        public DataTable queryMusic()
+        {
+            string str = @"select  bgMusic
+                            from dbo.c_music";
+            str = string.Format(str);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
+        //背景音乐保存
+        public bool saveMusic(dynamic d)
+        {
+            string str = @"update dbo.c_music set 
+                                bgMusic='{1}'
+                                where id={0}";
+            str = string.Format(str, 1, d.bgMusic);
+
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
         //总量统计
         public DataTable getWebTotal()
         {
