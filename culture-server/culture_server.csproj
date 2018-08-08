@@ -190,6 +190,7 @@
     <Compile Include="Models\homeCulture.cs" />
     <Compile Include="Models\image.cs" />
     <Compile Include="Models\message.cs" />
+    <Compile Include="Models\music.cs" />
     <Compile Include="Models\news.cs" />
     <Compile Include="Models\organize.cs" />
     <Compile Include="Models\taste.cs" />

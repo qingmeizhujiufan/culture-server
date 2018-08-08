@@ -240,6 +240,97 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 获取背景音乐
+        /// <summary>  
+        /// 获取背景音乐 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryMusic()
+        {
+            DataTable dt = new BLL.Common().queryMusic();
+            Object data;
+            if (dt.Rows.Count == 1)
+            {
+                data = new
+                {
+                    success = true,
+                    music = generateMusic(dt.Rows[0])
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 背景音乐保存
+        /// <summary>  
+        /// 背景音乐保存 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage saveMusic(dynamic d)
+        {
+            Object data;
+
+            try
+            {
+                BLL.Common common = new BLL.Common();
+                bool flag = false;
+                flag = common.saveMusic(d);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "保存信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 总量统计
         /// <summary>  
         /// 总量统计
@@ -341,6 +432,15 @@ namespace culture_server.Controllers
             t.slider_7 = util.generateImage(d["slider_7"].ToString());
             t.slider_8 = util.generateImage(d["slider_8"].ToString());
             t.slider_9 = util.generateImage(d["slider_9"].ToString());
+
+            return t;
+        }
+
+        //返回music对象
+        private music generateMusic(dynamic d)
+        {
+            music t = new music();
+            t.bgMusic = util.generateImage(d["bgMusic"].ToString());
 
             return t;
         }
