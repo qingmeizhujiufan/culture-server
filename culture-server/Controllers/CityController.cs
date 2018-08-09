@@ -172,6 +172,9 @@ namespace culture_server.Controllers
             city n = new city();
             n.id = d["id"].ToString();
             n.cityName = d["cityName"].ToString();
+            n.cultureTotal = Convert.ToInt32(d["cultureTotal"].ToString());
+            n.artTotal = Convert.ToInt32(d["artTotal"].ToString());
+            n.newsTotal = Convert.ToInt32(d["newsTotal"].ToString());
             n.create_time = d["create_time"].ToString();
 
             return n;

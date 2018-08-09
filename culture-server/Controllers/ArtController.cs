@@ -630,6 +630,104 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 获取管理评论列表
+        /// <summary>  
+        /// 获取管理评论列表 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryAdminCommentList()
+        {
+            DataTable dt = new BLL.handleArt().queryAdminCommentList();
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<artComment> list = new List<artComment>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    list.Add(generateArtComment(dt.Rows[i]));
+                }
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 批量删除评论
+        /// <summary>  
+        /// 批量删除评论
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage deleteComment(dynamic d)
+        {
+            string ids = d.ids;
+            object data = new object();
+            try
+            {
+                BLL.handleArt art = new BLL.handleArt();
+                bool flag = false;
+
+                flag = art.deleteComment(ids);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "删除失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 删除用户收藏的艺术品
         /// <summary>  
         /// 删除用户收藏的艺术品
