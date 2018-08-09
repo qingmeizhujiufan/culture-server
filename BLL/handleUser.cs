@@ -127,7 +127,14 @@ namespace BLL
                         from a t1 left join dbo.c_user t2 on DATEDIFF(day, t1.create_time, t2.create_time) = 0
                         group by t1.create_time";
             }
-
+            else if (type == "month")
+            {
+                str = @"select * 
+	                        from dbo.c_user 
+	                        WHERE (DATEPART(yy, create_time) = DATEPART(yy, GETDATE())) 
+	                        AND ((DATEPART(mm, create_time) = DATEPART(mm, GETDATE())) 
+	                        OR (31-DATEPART(DD, create_time)+DATEPART(DD, GETDATE()))<=31)";
+            }
             str = string.Format(str);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 

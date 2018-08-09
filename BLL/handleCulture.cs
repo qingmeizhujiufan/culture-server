@@ -293,6 +293,27 @@ namespace BLL
             return dt;
         }
 
+        //查询管理评论信息
+        public DataTable queryAdminCommentList()
+        {
+            string str = @"select  c.id,
+	                               c.pId,
+	                               c.cultureId,
+                                   c.userId,
+                                   u.avatar,
+                                   u.userName,
+                                   c.comment,
+	                               CONVERT(varchar(19), c.create_time, 120) as create_time
+                            from dbo.c_culture_comment c
+                            left join dbo.c_user u
+                            on c.userId = u.id
+                            order by c.create_time desc";
+            str = string.Format(str);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
         //保存评论
         public bool add(dynamic d)
         {
@@ -310,6 +331,27 @@ namespace BLL
                                 values ('{0}', '{1}', '{2}', '{3}')";
                 str = string.Format(str, d.pId, d.cultureId, d.userId, d.comment);
             }
+
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
+        //评论批量删除
+        public bool deleteComment(string ids)
+        {
+            string ids_str = "";
+            string[] ids_arr = ids.Split(',');
+            for (int i = 0; i < ids_arr.Length; i++)
+            {
+                ids = "'" + ids_arr[i] + "'";  //在每个元素前后加上我们想要的格式，效果例如：
+                if (i < ids_arr.Length - 1)  //根据数组元素的个数来判断应该加多少个逗号
+                {
+                    ids += ",";
+                }
+                ids_str += ids;
+            }
+            string str = "delete dbo.c_culture_comment where id in(" + ids_str + ")";
 
             int flag = DBHelper.SqlHelper.ExecuteSql(str);
 

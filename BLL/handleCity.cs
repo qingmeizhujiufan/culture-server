@@ -13,8 +13,11 @@ namespace BLL
         {
             string str = @"select   id,
                                     cityName,
+                                    (select COUNT(id) from dbo.c_culture as culture where culture.cityId = city.id) as cultureTotal,
+                                    (select COUNT(id) from dbo.c_art as art where art.cityId = city.id) as artTotal,
+                                    (select COUNT(id) from dbo.c_news as news where news.cityId = city.id) as newsTotal,
                                     CONVERT(varchar(19), create_time, 120) as create_time
-                                from dbo.c_city";
+                                from dbo.c_city as city";
             str = string.Format(str);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
