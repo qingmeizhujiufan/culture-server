@@ -129,11 +129,14 @@ namespace BLL
             }
             else if (type == "month")
             {
-                str = @"select * 
-	                        from dbo.c_user 
-	                        WHERE (DATEPART(yy, create_time) = DATEPART(yy, GETDATE())) 
-	                        AND ((DATEPART(mm, create_time) = DATEPART(mm, GETDATE())) 
-	                        OR (31-DATEPART(DD, create_time)+DATEPART(DD, GETDATE()))<=31)";
+                str = @"select  id=ROW_NUMBER()OVER(ORDER BY convert(varchar(10), create_time,120)),
+	                            convert(varchar(10), create_time,120) as countDate, 
+	                            count(id) as num
+                        from dbo.c_user 
+                        WHERE (DATEPART(yy, create_time) = DATEPART(yy, GETDATE())) 
+                        AND ((DATEPART(mm, create_time) = DATEPART(mm, GETDATE())) 
+                        OR (31-DATEPART(DD, create_time)+DATEPART(DD, GETDATE()))<=31)
+                        group by convert(varchar(10), create_time,120)";
             }
             str = string.Format(str);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);

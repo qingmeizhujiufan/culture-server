@@ -325,10 +325,13 @@ namespace BLL
             dc.DefaultValue = 1;
             DataColumn dc2 = new DataColumn("creator", typeof(string));
             DataColumn dc3 = new DataColumn("creatorName", typeof(string));
+            DataColumn dc4 = new DataColumn("readNum", typeof(int));
+            dc4.DefaultValue = 1;
 
             dt.Columns.Add(dc);
             dt.Columns.Add(dc2);
             dt.Columns.Add(dc3);
+            dt.Columns.Add(dc4);
 
             return dt;
         }

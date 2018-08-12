@@ -106,7 +106,7 @@ namespace BLL
             return dt;
         }
 
-        //文化，艺术品，新闻浏览分布统计
+        //文化，艺术品，新闻，图片，视频浏览分布统计
         public DataTable countCAN()
         {
             string str = @"select COUNT(*) from dbo.c_read where viewId in(select id from dbo.c_culture)
@@ -114,6 +114,8 @@ namespace BLL
                             select COUNT(*) from dbo.c_read where viewId in(select id from dbo.c_art)
                             union all
                             select COUNT(*) from dbo.c_read where viewId in(select id from dbo.c_news)
+                            union all
+                            select COUNT(*) from dbo.c_read where viewId in(select id from dbo.c_taste)
                             union all
                             select COUNT(*) from dbo.c_read where viewId in(select id from dbo.c_video)";
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);

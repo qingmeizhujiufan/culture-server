@@ -29,6 +29,7 @@ namespace BLL
                                     state,
                                     (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     (select COUNT(*) from dbo.c_culture_like where n.id = cultureId) as collectNum,
+                                    ISNULL(isRecommend, 0) isRecommend,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -45,7 +46,7 @@ namespace BLL
                                 where state = 1 and cultureTitle like '%{2}%'";
             str += conditionCity;
             str += @")
-                            select id, cityId, cityName, cultureType, cultureTitle, cultureCover, cultureAuthor, cultureBrief, cultureContent, state, readNum, collectNum, updator, updatorName, update_time,creator, creatorName, typeName, create_time from CulturePage
+                            select id, cityId, cityName, cultureType, cultureTitle, cultureCover, cultureAuthor, cultureBrief, cultureContent, state, readNum, collectNum, isRecommend, updator, updatorName, update_time,creator, creatorName, typeName, create_time from CulturePage
                             where RowNumber > @Start AND RowNumber <= @End
                             ORDER BY create_time desc";
             str = string.Format(str, (pageNumber - 1) * pageSize, pageNumber * pageSize, conditionText, cityId);
@@ -69,6 +70,7 @@ namespace BLL
                                     state,
                                     (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     (select COUNT(*) from dbo.c_culture_like where n.id = cultureId) as collectNum,
+                                    ISNULL(isRecommend, 0) isRecommend,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -102,6 +104,7 @@ namespace BLL
                                     state,
                                     (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
                                     (select COUNT(*) from dbo.c_culture_like where n.id = cultureId) as collectNum,
+                                    ISNULL(isRecommend, 0) isRecommend,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
@@ -230,6 +233,56 @@ namespace BLL
             return flag > 0 ? true : false;
         }
 
+        //是否设置文化为推荐
+        public bool settingRecommend(dynamic d)
+        {
+            string str = @"update dbo.c_culture set 
+                                isRecommend= {1},
+                                update_time='{2}'
+                                where id='{0}'";
+            str = string.Format(str, d.id, d.isRecommend, System.DateTime.Now);
+
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
+        //获取Top5 推荐
+        public DataTable queryRecommendTop5()
+        {
+            string str = @"select top 5 n.id,
+                                    n.cityId,
+                                    c.cityName,
+                                    cultureType,
+                                    cultureTitle,
+                                    cultureCover,
+                                    cultureAuthor,
+                                    cultureBrief,
+                                    cultureContent,
+                                    state,
+                                    (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
+                                    (select COUNT(*) from dbo.c_culture_like where n.id = cultureId) as collectNum,
+                                    ISNULL(isRecommend, 0) isRecommend,
+                                    updator,
+                                    updatorName,
+                                    CONVERT(varchar(19), n.update_time, 120) as update_time,
+                                    creator,
+                                    a.userName as creatorName,
+                                    a.typeName,
+                                    CONVERT(varchar(19), n.create_time, 120) as create_time
+                                from dbo.c_culture n
+                                left join dbo.c_city c
+                                on n.cityId = c.id
+                                left join dbo.c_admin a
+                                on n.creator = a.id
+                                where n.state = 1 and n.isRecommend = 1
+                                order by n.update_time desc";
+            str = string.Format(str);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
         //获取用户收藏文化
         public DataTable queryUserCollectCulture(string userId)
         {
@@ -245,6 +298,7 @@ namespace BLL
                                     state,
                                     (select COUNT(id) from dbo.c_culture_like where n.id = cultureId) as likeNum,
                                     (select COUNT(id) from dbo.c_read where n.id = viewId) as readNum,
+                                    ISNULL(isRecommend, 0) isRecommend,
                                     updator,
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,

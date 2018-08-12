@@ -15,6 +15,7 @@ namespace BLL
                                     adCover,
                                     adTitle,
                                     adLink,
+                                    adsense,
                                     state,
                                     CONVERT(varchar(19), create_time, 120) as create_time
                                 from dbo.c_ad ";
@@ -31,11 +32,30 @@ namespace BLL
                                     adCover,
                                     adTitle,
                                     adLink,
+                                    adsense,
                                     state,
-                                    CONVERT(varchar(19), n.create_time, 120) as create_time
+                                    CONVERT(varchar(19), create_time, 120) as create_time
                                 from dbo.c_ad 
                                 where id='{0}'";
             str = string.Format(str, id);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
+        }
+
+        //获取广告详情通过广告位
+        public DataTable queryAdsense(string adsense)
+        {
+            string str = @"select   id,
+                                    adCover,
+                                    adTitle,
+                                    adLink,
+                                    adsense,
+                                    state,
+                                    CONVERT(varchar(19), create_time, 120) as create_time
+                                from dbo.c_ad 
+                                where adsense='{0}' and state=1";
+            str = string.Format(str, adsense);
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
             return dt;
@@ -49,18 +69,20 @@ namespace BLL
             string id = d.id;
             if (string.IsNullOrEmpty(id))
             {
-                str = @"insert into dbo.c_ad (adCover, adTitle, adLink, state)
-                                values ('{0}', '{1}', '{2}', 0)";
-                str = string.Format(str, d.adCover, d.adTitle, d.adLink);
+                str = @"insert into dbo.c_ad (adCover, adTitle, adLink, 
+                                    adsense, state)
+                                values ('{0}', '{1}', '{2}', '{3}', 0)";
+                str = string.Format(str, d.adCover, d.adTitle, d.adLink, d.adsense);
             }
             else
             {
                 str = @"update dbo.c_ad set 
                                 adCover='{1}',
                                 adTitle='{2}', 
-                                adLink='{3}'
+                                adLink='{3}',
+                                adsense='{4}'
                                 where id='{0}'";
-                str = string.Format(str, d.id, d.adCover, d.adTitle, d.adLink);
+                str = string.Format(str, d.id, d.adCover, d.adTitle, d.adLink, d.adsense);
             }
 
             flag = DBHelper.SqlHelper.ExecuteSql(str);
