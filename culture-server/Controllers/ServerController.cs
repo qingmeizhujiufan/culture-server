@@ -54,7 +54,7 @@ namespace culture_server.Controllers
             }
             string userName = Convert.ToString(user.userName);
             string userPwd = Convert.ToString(user.userPwd);
-            string strSql = @"select    id
+            string strSql = @"select    id, type, typeName
                                         from dbo.c_admin
                                         where userName = '{0}' and userPwd = '{1}'";
             strSql = string.Format(strSql, userName, userPwd);
@@ -76,7 +76,10 @@ namespace culture_server.Controllers
                 {
                     success = true,
                     token = Token,
-                    userId = dt_user.Rows[0]["id"]
+                    userId = dt_user.Rows[0]["id"],
+                    type = dt_user.Rows[0]["type"],
+                    typeName = dt_user.Rows[0]["typeName"],
+                    expireDate = DateTime.Now.AddHours(3).ToString()
                 };
             }
             else
@@ -374,9 +377,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 文化，艺术品，新闻浏览分布统计
+        #region 文化，艺术品，新闻，图片，视频浏览分布统计
         /// <summary>  
-        /// 文化，艺术品，新闻浏览分布统计
+        /// 文化，艺术品，新闻，图片，视频浏览分布统计
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -396,7 +399,8 @@ namespace culture_server.Controllers
                         cultureTotal = dt.Rows[0][0],
                         artTotal = dt.Rows[1][0],
                         newsTotal = dt.Rows[2][0],
-                        videoTotal = dt.Rows[3][0]
+                        tasteTotal = dt.Rows[3][0],
+                        videoTotal = dt.Rows[4][0]
                     }
                 };
             }

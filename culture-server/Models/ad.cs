@@ -11,6 +11,7 @@ namespace culture_server.Models
         public image adCover { set; get; }
         public string adTitle { set; get; }
         public string adLink { set; get; }
+        public string adsense { set; get; }
         public int state { set; get; }
         public string create_time { set; get; }
     }

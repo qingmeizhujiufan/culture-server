@@ -21,7 +21,7 @@ namespace culture_server.Controllers
         /// <param name="id">id</param>  
         /// <returns></returns>
         [AcceptVerbs("OPTIONS", "GET")]
-        public HttpResponseMessage queryList(dynamic d)
+        public HttpResponseMessage queryList()
         {
             DataTable dt = new BLL.handleAd().queryList();
             Object data;
@@ -74,6 +74,43 @@ namespace culture_server.Controllers
                 {
                     success = true,
                     backData = generateAd(dt.Rows[0])
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 获取广告详情通过广告位
+        /// <summary>  
+        /// 获取广告详情通过广告位 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryAdsense(string adsense)
+        {
+            DataTable dt = new BLL.handleAd().queryAdsense(adsense);
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                data = new
+                {
+                    success = true,
+                    backData = dt.Rows.Count > 0 ? generateAd(dt.Rows[0]) : null
                 };
             }
             else
@@ -203,9 +240,9 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 审核新闻
+        #region 审核广告
         /// <summary>  
-        /// 审核新闻 
+        /// 审核广告
         /// </summary>  
         /// <param name="id">id</param>  
         /// <returns></returns>
@@ -250,7 +287,7 @@ namespace culture_server.Controllers
                     data = new
                     {
                         success = false,
-                        backMsg = "新闻不存在"
+                        backMsg = "广告不存在"
 
                     };
                 }
@@ -292,6 +329,7 @@ namespace culture_server.Controllers
             n.adCover = util.generateImage(d["adCover"].ToString());
             n.adTitle = d["adTitle"].ToString();
             n.adLink = d["adLink"].ToString();
+            n.adsense = d["adsense"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
             n.create_time = d["create_time"].ToString();
 

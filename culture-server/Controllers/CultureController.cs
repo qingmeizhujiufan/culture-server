@@ -393,6 +393,103 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 是否设置文化为推荐
+        /// <summary>  
+        /// 是否设置文化为推荐 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [SupportFilter]
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage settingRecommend(dynamic d)
+        {
+            Object data;
+
+            try
+            {
+                BLL.handleCulture culture = new BLL.handleCulture();
+                bool flag = false;
+                flag = culture.settingRecommend(d);
+
+                if (flag)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "保存信息失败"
+
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "服务异常"
+
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
+        #region 获取Top5 推荐
+        /// <summary>  
+        /// 获取Top5 推荐 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryRecommendTop5()
+        {
+            DataTable dt = new BLL.handleCulture().queryRecommendTop5();
+            Object data;
+            if (dt.Rows.Count >= 0)
+            {
+                List<culture> list = new List<culture>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    list.Add(generateCulture(dt.Rows[i]));
+                }
+
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            else
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 获取用户收藏文化
         /// <summary>  
         /// 获取用户收藏文化
@@ -700,6 +797,7 @@ namespace culture_server.Controllers
             n.state = Convert.ToInt32(d["state"].ToString());
             n.readNum = Convert.ToInt32(d["readNum"].ToString());
             n.collectNum = Convert.ToInt32(d["collectNum"].ToString());
+            n.isRecommend = Convert.ToInt32(d["isRecommend"].ToString());
             n.updator = d["updator"].ToString();
             n.updatorName = d["updatorName"].ToString();
             n.update_time = d["update_time"].ToString();

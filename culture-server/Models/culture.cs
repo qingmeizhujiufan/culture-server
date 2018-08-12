@@ -19,6 +19,7 @@ namespace culture_server.Models
         public int state { set; get; }
         public int readNum { set; get; }
         public int collectNum { set; get; }
+        public int isRecommend { set; get; }
         public string updator { set; get; }
         public string updatorName { set; get; }
         public string update_time { set; get; }
