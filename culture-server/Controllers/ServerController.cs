@@ -54,7 +54,7 @@ namespace culture_server.Controllers
             }
             string userName = Convert.ToString(user.userName);
             string userPwd = Convert.ToString(user.userPwd);
-            string strSql = @"select    id, type, typeName
+            string strSql = @"select    id, cityId, type, typeName
                                         from dbo.c_admin
                                         where userName = '{0}' and userPwd = '{1}'";
             strSql = string.Format(strSql, userName, userPwd);
@@ -77,6 +77,7 @@ namespace culture_server.Controllers
                     success = true,
                     token = Token,
                     userId = dt_user.Rows[0]["id"],
+                    cityId = dt_user.Rows[0]["cityId"],
                     type = dt_user.Rows[0]["type"],
                     typeName = dt_user.Rows[0]["typeName"],
                     expireDate = DateTime.Now.AddHours(3).ToString()

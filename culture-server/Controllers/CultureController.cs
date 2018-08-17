@@ -64,9 +64,9 @@ namespace culture_server.Controllers
         /// <param name="id">id</param>  
         /// <returns></returns>
         [AcceptVerbs("OPTIONS", "GET")]
-        public HttpResponseMessage queryListByAdmin(dynamic d)
+        public HttpResponseMessage queryListByAdmin(string userId)
         {
-            DataTable dt = new BLL.handleCulture().queryListByAdmin();
+            DataTable dt = new BLL.handleCulture().queryListByAdmin(userId);
             Object data;
             if (dt.Rows.Count >= 0)
             {
