@@ -54,8 +54,13 @@ namespace BLL
         }
 
         //获取管理新闻列表
-        public DataTable queryListByAdmin()
+        public DataTable queryListByAdmin(string userId)
         {
+            int type = new Common().queyrUserType(userId);
+            string auth_str = string.Empty;
+            if (type == 1) auth_str = @" where 1=1";
+            else if (type == 2) auth_str = @" where a.creator='" + userId + "'";
+            else auth_str = @" where a.id='" + userId + "'";
             string str = @"select   n.id,
                                     n.cityId,
                                     c.cityName,
@@ -79,7 +84,7 @@ namespace BLL
                                 on n.cityId = c.id
                                 left join dbo.c_admin a
                                 on n.creator = a.id";
-            str = string.Format(str);
+            str += auth_str;
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
             return dt;

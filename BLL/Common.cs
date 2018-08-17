@@ -122,5 +122,21 @@ namespace BLL
 
             return dt;
         }
+
+        //查询当前用户管理层级
+        public int queyrUserType(string userId)
+        {
+            string str = "select type from dbo.c_admin where id='{0}'";
+            str = string.Format(str, userId);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+            if (dt.Rows.Count == 1)
+            {
+                return Convert.ToInt32(dt.Rows[0]["type"]);
+            }
+            else
+            {
+                return 3;
+            }
+        }
     }
 }
