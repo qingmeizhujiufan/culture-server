@@ -6,7 +6,9 @@ using System.Data;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using System.Web.Script.Serialization;
 
 namespace culture_server.Controllers
@@ -21,9 +23,9 @@ namespace culture_server.Controllers
         /// <returns></returns>
         [SupportFilter]
         [AcceptVerbs("OPTIONS", "GET")]
-        public HttpResponseMessage getAllOrganizeInfo()
+        public HttpResponseMessage getAllOrganizeInfo(string userId)
         {
-            DataTable dt = new BLL.handleOrganize().getAllOrganizeInfo();
+            DataTable dt = new BLL.handleOrganize().getAllOrganizeInfo(userId);
             Object data;
             if (dt.Rows.Count >= 0)
             {
@@ -33,7 +35,10 @@ namespace culture_server.Controllers
                     organize o = new organize();
                     o.id = dt.Rows[i]["id"].ToString();
                     o.pId = dt.Rows[i]["pId"].ToString();
+                    o.cityId = dt.Rows[i]["cityId"].ToString();
+                    o.cityName = dt.Rows[i]["cityName"].ToString();
                     o.userName = dt.Rows[i]["userName"].ToString();
+                    o.realName = dt.Rows[i]["realName"].ToString();
                     o.type = Convert.ToInt32(dt.Rows[i]["type"].ToString());
                     o.typeName = dt.Rows[i]["typeName"].ToString();
                     o.update_time = dt.Rows[i]["update_time"].ToString();
