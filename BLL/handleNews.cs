@@ -32,7 +32,7 @@ namespace BLL
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
                                     creator,
-                                    a.userName as creatorName,
+                                    a.realName as creatorName,
                                     a.typeName,
                                     CONVERT(varchar(19), n.create_time, 120) as create_time,
 									ROW_NUMBER() OVER (ORDER BY a.create_time desc) AS RowNumber
@@ -59,7 +59,7 @@ namespace BLL
             int type = new Common().queyrUserType(userId);
             string auth_str = string.Empty;
             if (type == 1) auth_str = @" where 1=1";
-            else if (type == 2) auth_str = @" where a.creator='" + userId + "'";
+            else if (type == 2) auth_str = @" where n.creator='" + userId + "' or n.creator in (select id from dbo.c_admin where pId='" + userId +"')";
             else auth_str = @" where a.id='" + userId + "'";
             string str = @"select   n.id,
                                     n.cityId,
@@ -76,7 +76,7 @@ namespace BLL
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
                                     creator,
-                                    a.userName as creatorName,
+                                    a.realName as creatorName,
                                     a.typeName,
                                     CONVERT(varchar(19), n.create_time, 120) as create_time
                                 from dbo.c_news n
@@ -108,7 +108,7 @@ namespace BLL
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
                                     creator,
-                                    a.userName as creatorName,
+                                    a.realName as creatorName,
                                     a.typeName,
                                     CONVERT(varchar(19), n.create_time, 120) as create_time
                                 from dbo.c_news n
