@@ -637,9 +637,9 @@ namespace culture_server.Controllers
         /// <param name="id">id</param>  
         /// <returns></returns>
         [AcceptVerbs("OPTIONS", "GET")]
-        public HttpResponseMessage queryAdminCommentList()
+        public HttpResponseMessage queryAdminCommentList(string userId)
         {
-            DataTable dt = new BLL.handleArt().queryAdminCommentList();
+            DataTable dt = new BLL.handleArt().queryAdminCommentList(userId);
             Object data;
             if (dt.Rows.Count >= 0)
             {

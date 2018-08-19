@@ -423,6 +423,50 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 返回所有管理员用户名做唯一性校验
+        /// <summary>  
+        /// 返回所有管理员用户名做唯一性校验 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "GET")]
+        public HttpResponseMessage queryUserNames()
+        {
+            string str = @"select userName from dbo.c_admin";
+            Object data;
+            try
+            {
+                DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+                List<string> list = new List<string>();
+                for (int i = 0; i < dt.Rows.Count;i++ )
+                {
+                    list.Add(dt.Rows[i]["userName"].ToString());
+                }
+                data = new
+                {
+                    success = true,
+                    backData = list
+                };
+            }
+            catch (Exception e)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+            
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 私有方法集
         //返回homeCulture对象
         private homeCulture generateHomeCulture(dynamic d)
