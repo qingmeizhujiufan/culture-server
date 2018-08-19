@@ -353,8 +353,19 @@ namespace BLL
         }
 
         //查询管理评论信息
-        public DataTable queryAdminCommentList()
+        public DataTable queryAdminCommentList(string userId)
         {
+            int type = new Common().queyrUserType(userId);
+            string auth_str = string.Empty;
+            if (type == 1) auth_str = @" where 1=1";
+            else if (type == 2) auth_str = @" where c.cultureId in(
+								select id 
+								from dbo.c_culture cu
+								where cu.creator='" + userId + "'or cu.creator in(select id from dbo.c_admin where pId='" + userId + "'))";
+            else auth_str = @" where c.cultureId in(
+								select id 
+								from dbo.c_culture cu
+								where cu.creator='" + userId + "')";
             string str = @"select  c.id,
 	                               c.pId,
 	                               c.cultureId,
@@ -365,9 +376,9 @@ namespace BLL
 	                               CONVERT(varchar(19), c.create_time, 120) as create_time
                             from dbo.c_culture_comment c
                             left join dbo.c_user u
-                            on c.userId = u.id
-                            order by c.create_time desc";
-            str = string.Format(str);
+                            on c.userId = u.id";
+            str += auth_str;
+            str += " order by c.create_time desc";
             DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
 
             return dt;
