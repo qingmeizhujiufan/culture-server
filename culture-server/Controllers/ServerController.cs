@@ -467,6 +467,56 @@ namespace culture_server.Controllers
         }
         #endregion
 
+        #region 更新密码
+        /// <summary>  
+        /// 更新密码 
+        /// </summary>  
+        /// <param name="id">id</param>  
+        /// <returns></returns>
+        [AcceptVerbs("OPTIONS", "POST")]
+        public HttpResponseMessage updatePwd(dynamic d)
+        {
+            string str = @"update dbo.c_admin set userPwd='{1}' where id='{0}' and userPwd='{2}'";
+            Object data;
+            try
+            {
+                str = string.Format(str, d.id, d.userPwd, d.oldPwd);
+                int flag = DBHelper.SqlHelper.ExecuteSql(str);
+                if (flag > 0)
+                {
+                    data = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    data = new
+                    {
+                        success = false,
+                        backMsg = "密码修改失败，请重试！"
+                    };
+                }           
+            }
+            catch (Exception e)
+            {
+                data = new
+                {
+                    success = false,
+                    backMsg = "数据异常"
+                };
+            }
+
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            string json = serializer.Serialize(data);
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            };
+        }
+        #endregion
+
         #region 私有方法集
         //返回homeCulture对象
         private homeCulture generateHomeCulture(dynamic d)
