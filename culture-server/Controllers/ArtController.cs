@@ -794,7 +794,7 @@ namespace culture_server.Controllers
             n.artCover = util.generateListImage(d["artCover"].ToString());
             n.artMoney = Convert.ToSingle(d["artMoney"].ToString());
             n.buyUrl = d["buyUrl"].ToString();
-            n.artContent = util.generateListImage(d["artContent"].ToString());
+            n.artContent = d["artContent"].ToString();
             n.artAuthor = d["artAuthor"].ToString();
             n.artBrief = d["artBrief"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());

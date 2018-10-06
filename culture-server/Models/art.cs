@@ -17,7 +17,7 @@ namespace culture_server.Models
         public Single artMoney { set; get; }
         public string buyUrl { set; get; }
         public string artBrief { set; get; }
-        public List<image> artContent { set; get; }
+        public string artContent { set; get; }
         public int state { set; get; }
         public int readNum { set; get; }
         public int collectNum { set; get; }
