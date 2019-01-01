@@ -56,18 +56,21 @@ namespace BLL
             string id = d.id;
             if (string.IsNullOrEmpty(id))
             {
-                str = @"insert into dbo.c_user (adCover, adTitle, adLink, state)
-                                values ('{0}', '{1}', '{2}', 0)";
-                str = string.Format(str, d.adCover, d.adTitle, d.adLink);
+                str = @"insert into dbo.c_user (email, avatar, sex, userName, userPwd, nickName, telephone, state)
+                                values ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', 0)";
+                str = string.Format(str, d.email, d.avatar, d.sex, d.userName, d.userPwd, d.nickName, d.telephone, d.state);
             }
             else
             {
                 str = @"update dbo.c_user set 
-                                adCover='{1}',
-                                adTitle='{2}', 
-                                adLink='{3}'
+                                email='{1}',
+                                avatar='{2}', 
+                                sex='{3}',
+                                userName='{4}',
+                                nickName='{5}',
+                                telephone='{6}'
                                 where id='{0}'";
-                str = string.Format(str, d.id, d.adCover, d.adTitle, d.adLink);
+                str = string.Format(str, d.id, d.email, d.avatar, d.sex, d.userName, d.nickName, d.telephone);
             }
 
             flag = DBHelper.SqlHelper.ExecuteSql(str);
