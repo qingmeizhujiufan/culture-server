@@ -810,6 +810,7 @@ D:\my-project\WXOrdrPlatform\DBHelper\bin\Debug\ConfigHelper.pdb
 D:\my-project\WXOrdrPlatform\DBHelper\obj\Debug\DBHelper.csprojResolveAssemblyReference.cache
 D:\my-project\WXOrdrPlatform\DBHelper\obj\Debug\DBHelper.dll
 D:\my-project\WXOrdrPlatform\DBHelper\obj\Debug\DBHelper.pdb
+D:\my-project\culture-server\DBHelper\obj\Debug\DBHelper.csprojResolveAssemblyReference.cache
 D:\my-project\culture-server\DBHelper\bin\Debug\DBHelper.dll
 D:\my-project\culture-server\DBHelper\bin\Debug\DBHelper.pdb
 D:\my-project\culture-server\DBHelper\bin\Debug\CommonTool.dll
@@ -818,6 +819,5 @@ D:\my-project\culture-server\DBHelper\bin\Debug\MySql.Data.dll
 D:\my-project\culture-server\DBHelper\bin\Debug\Newtonsoft.Json.dll
 D:\my-project\culture-server\DBHelper\bin\Debug\CommonTool.pdb
 D:\my-project\culture-server\DBHelper\bin\Debug\ConfigHelper.pdb
-D:\my-project\culture-server\DBHelper\obj\Debug\DBHelper.csprojResolveAssemblyReference.cache
 D:\my-project\culture-server\DBHelper\obj\Debug\DBHelper.dll
 D:\my-project\culture-server\DBHelper\obj\Debug\DBHelper.pdb

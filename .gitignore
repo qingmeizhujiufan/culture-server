@@ -194,3 +194,15 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+BLL/bin/
+BLL/obj/
+CommonTool/bin/
+CommonTool/obj/
+ConfigHelper/bin/
+ConfigHelper/obj/
+ConfigHelper/bin/
+DBHelper/bin/
+DBHelper/obj/
+External/bin/
+External/obj/

@@ -70,3 +70,15 @@ D:\项目\WXOrdrPlatform\DBHelper\bin\Release\ConfigHelper.pdb
 D:\项目\WXOrdrPlatform\DBHelper\obj\Release\DBHelper.csprojResolveAssemblyReference.cache
 D:\项目\WXOrdrPlatform\DBHelper\obj\Release\DBHelper.dll
 D:\项目\WXOrdrPlatform\DBHelper\obj\Release\DBHelper.pdb
+D:\my-project\culture-server\DBHelper\bin\Release\DBHelper.dll
+D:\my-project\culture-server\DBHelper\bin\Release\DBHelper.pdb
+D:\my-project\culture-server\DBHelper\bin\Release\CommonTool.dll
+D:\my-project\culture-server\DBHelper\bin\Release\ConfigHelper.dll
+D:\my-project\culture-server\DBHelper\bin\Release\MySql.Data.dll
+D:\my-project\culture-server\DBHelper\bin\Release\Newtonsoft.Json.Net20.dll
+D:\my-project\culture-server\DBHelper\bin\Release\Newtonsoft.Json.dll
+D:\my-project\culture-server\DBHelper\bin\Release\CommonTool.pdb
+D:\my-project\culture-server\DBHelper\bin\Release\ConfigHelper.pdb
+D:\my-project\culture-server\DBHelper\obj\Release\DBHelper.csprojResolveAssemblyReference.cache
+D:\my-project\culture-server\DBHelper\obj\Release\DBHelper.dll
+D:\my-project\culture-server\DBHelper\obj\Release\DBHelper.pdb

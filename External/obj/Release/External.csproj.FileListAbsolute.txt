@@ -76,3 +76,16 @@ D:\项目\WXOrdrPlatform\External\bin\Release\ConfigHelper.pdb
 D:\项目\WXOrdrPlatform\External\obj\Release\External.csprojResolveAssemblyReference.cache
 D:\项目\WXOrdrPlatform\External\obj\Release\External.dll
 D:\项目\WXOrdrPlatform\External\obj\Release\External.pdb
+D:\my-project\culture-server\External\bin\Release\External.dll
+D:\my-project\culture-server\External\bin\Release\External.pdb
+D:\my-project\culture-server\External\bin\Release\CommonTool.dll
+D:\my-project\culture-server\External\bin\Release\DBHelper.dll
+D:\my-project\culture-server\External\bin\Release\Newtonsoft.Json.dll
+D:\my-project\culture-server\External\bin\Release\MySql.Data.dll
+D:\my-project\culture-server\External\bin\Release\ConfigHelper.dll
+D:\my-project\culture-server\External\bin\Release\CommonTool.pdb
+D:\my-project\culture-server\External\bin\Release\DBHelper.pdb
+D:\my-project\culture-server\External\bin\Release\ConfigHelper.pdb
+D:\my-project\culture-server\External\obj\Release\External.csprojResolveAssemblyReference.cache
+D:\my-project\culture-server\External\obj\Release\External.dll
+D:\my-project\culture-server\External\obj\Release\External.pdb

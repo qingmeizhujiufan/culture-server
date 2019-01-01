@@ -22,3 +22,9 @@ D:\项目\WXOrdrPlatform\CommonTool\bin\Release\Newtonsoft.Json.dll
 D:\项目\WXOrdrPlatform\CommonTool\obj\Release\CommonTool.csprojResolveAssemblyReference.cache
 D:\项目\WXOrdrPlatform\CommonTool\obj\Release\CommonTool.dll
 D:\项目\WXOrdrPlatform\CommonTool\obj\Release\CommonTool.pdb
+D:\my-project\culture-server\CommonTool\bin\Release\CommonTool.dll
+D:\my-project\culture-server\CommonTool\bin\Release\CommonTool.pdb
+D:\my-project\culture-server\CommonTool\bin\Release\Newtonsoft.Json.dll
+D:\my-project\culture-server\CommonTool\obj\Release\CommonTool.csprojResolveAssemblyReference.cache
+D:\my-project\culture-server\CommonTool\obj\Release\CommonTool.dll
+D:\my-project\culture-server\CommonTool\obj\Release\CommonTool.pdb

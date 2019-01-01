@@ -58,6 +58,7 @@
     <Compile Include="HttpWeb.cs" />
     <Compile Include="ImageHelper.cs" />
     <Compile Include="LogerInfo.cs" />
+    <Compile Include="MailHelper.cs" />
     <Compile Include="MD5Code.cs" />
     <Compile Include="PictureSynthesis.cs" />
     <Compile Include="PrintingHelper.cs" />

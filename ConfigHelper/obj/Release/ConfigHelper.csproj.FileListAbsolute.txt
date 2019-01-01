@@ -46,3 +46,11 @@ D:\项目\WXOrdrPlatform\ConfigHelper\bin\Release\CommonTool.pdb
 D:\项目\WXOrdrPlatform\ConfigHelper\obj\Release\ConfigHelper.csprojResolveAssemblyReference.cache
 D:\项目\WXOrdrPlatform\ConfigHelper\obj\Release\ConfigHelper.dll
 D:\项目\WXOrdrPlatform\ConfigHelper\obj\Release\ConfigHelper.pdb
+D:\my-project\culture-server\ConfigHelper\bin\Release\ConfigHelper.dll
+D:\my-project\culture-server\ConfigHelper\bin\Release\ConfigHelper.pdb
+D:\my-project\culture-server\ConfigHelper\bin\Release\CommonTool.dll
+D:\my-project\culture-server\ConfigHelper\bin\Release\Newtonsoft.Json.dll
+D:\my-project\culture-server\ConfigHelper\bin\Release\CommonTool.pdb
+D:\my-project\culture-server\ConfigHelper\obj\Release\ConfigHelper.csprojResolveAssemblyReference.cache
+D:\my-project\culture-server\ConfigHelper\obj\Release\ConfigHelper.dll
+D:\my-project\culture-server\ConfigHelper\obj\Release\ConfigHelper.pdb

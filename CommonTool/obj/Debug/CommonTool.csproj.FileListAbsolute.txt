@@ -378,3 +378,4 @@ D:\my-project\culture-server\CommonTool\bin\Debug\CommonTool.pdb
 D:\my-project\culture-server\CommonTool\bin\Debug\Newtonsoft.Json.dll
 D:\my-project\culture-server\CommonTool\obj\Debug\CommonTool.dll
 D:\my-project\culture-server\CommonTool\obj\Debug\CommonTool.pdb
+D:\my-project\culture-server\CommonTool\obj\Debug\CommonTool.csprojResolveAssemblyReference.cache
