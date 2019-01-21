@@ -32,11 +32,14 @@ namespace BLL
         public DataTable queryDetail(string id)
         {
             string str = @"select   id,
-                                    avatar,
+                                    openid,
+                                    nickname,
                                     sex,
-                                    userName,
-                                    nickName,
-                                    telephone,
+                                    province,
+                                    city,
+                                    country,
+                                    headimgurl,
+                                    unionid,
                                     ISNULL(state, 0) as state,
                                     ISNULL(isDelete, 0) as isDelete,
                                     CONVERT(varchar(19), create_time, 120) as create_time
@@ -48,34 +51,69 @@ namespace BLL
             return dt;
         }
 
-        //保存用户
-        public bool saveAP(dynamic d)
+        //新增用户
+        public bool insert(dynamic d)
         {
-            string str = string.Empty;
-            int flag = 0;
-            string id = d.id;
-            if (string.IsNullOrEmpty(id))
-            {
-                str = @"insert into dbo.c_user (email, avatar, sex, userName, userPwd, nickName, telephone, state)
-                                values ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', 0)";
-                str = string.Format(str, d.email, d.avatar, d.sex, d.userName, d.userPwd, d.nickName, d.telephone, d.state);
-            }
-            else
-            {
-                str = @"update dbo.c_user set 
-                                email='{1}',
-                                avatar='{2}', 
-                                sex='{3}',
-                                userName='{4}',
-                                nickName='{5}',
-                                telephone='{6}'
-                                where id='{0}'";
-                str = string.Format(str, d.id, d.email, d.avatar, d.sex, d.userName, d.nickName, d.telephone);
-            }
 
-            flag = DBHelper.SqlHelper.ExecuteSql(str);
+            string str = @"insert into dbo.c_user (
+                                    openid,
+                                    nickname,
+                                    sex,
+                                    province,
+                                    city,
+                                    country,
+                                    headimgurl,
+                                    unionid, 
+                                    state
+                                )
+                                values ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}',, '{7}', 0)";
+            str = string.Format(str, d.openid, d.nickname, d.sex, d.province, d.city, d.country, d.headimgurl, d.unionid);
+
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
 
             return flag > 0 ? true : false;
+        }
+
+        //更新用户
+        public bool update(dynamic d)
+        {
+            string str = @"update dbo.c_user set 
+                                    openid='{1}',
+                                    nickname='{2}',
+                                    sex='{3}',
+                                    province='{4}',
+                                    city='{5}',
+                                    country='{6}',
+                                    headimgurl='{7}',
+                                    unionid='{8}'
+                                where id='{0}'";
+            str = string.Format(str, d.id, d.openid, d.nickname, d.sex, d.province, d.city, d.country, d.headimgurl, d.unionid);
+
+            int flag = DBHelper.SqlHelper.ExecuteSql(str);
+
+            return flag > 0 ? true : false;
+        }
+
+        public DataTable findUserByOpenId(string openId)
+        {
+            string str = @"select   id,
+                                    openid,
+                                    nickname,
+                                    sex,
+                                    province,
+                                    city,
+                                    country,
+                                    headimgurl,
+                                    unionid,
+                                    ISNULL(state, 0) as state,
+                                    ISNULL(isDelete, 0) as isDelete,
+                                    CONVERT(varchar(19), create_time, 120) as create_time
+                                from dbo.c_user 
+                                where openid='{0}'";
+            str = string.Format(str, openId);
+            DataTable dt = DBHelper.SqlHelper.GetDataTable(str);
+
+            return dt;
         }
 
         //删除用户 逻辑删除
