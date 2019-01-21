@@ -59,72 +59,13 @@ namespace CommonTool
 
             return strRtn;
 
-        }
-
-        /// <summary>
-        /// 获取全局的Access_Token
-        /// </summary>
-        /// <returns></returns>
-        public static string GetNewToken()
-        {
-            string strRtn = string.Empty;
-
-            string appid = CommonTool.WXParam.APP_ID;
-            string secret = CommonTool.WXParam.APP_SECRET;
-
-            string UrlForAccess_Token = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}";
-            UrlForAccess_Token = string.Format(UrlForAccess_Token, appid, secret);
-            //CommonTool.WriteLog.Write(UrlForAccess_Token);
-            string strAccess_Token = CommonTool.Common.GetHtmlFromUrl(UrlForAccess_Token);
-            CommonTool.WriteLog.Write("strAccess_Token   234243======" + strAccess_Token);
-            Dictionary<string, string> dic2 = CommonTool.JsonHelper.GetParms2(strAccess_Token);
-            if (dic2.Keys.Contains("access_token"))
-            {
-                strRtn = dic2["access_token"].ToString();
-            }
-
-            return strRtn;
-        }
-
-        /// <summary>
-        /// 获取jsapi_ticket
-        /// </summary>
-        /// <param name="strToken"></param>
-        /// <returns></returns>
-        public static string GetTicket()
-        {
-            string strRtn = string.Empty;
-            string strToken = string.Empty;
-
-            //如果ticket还没有生成，或者据上次生成时间超过6000秒，重新生成
-            if (string.IsNullOrEmpty(TicketModal.ticket) || ((DateTime.Now - DateTime.Now.AddMinutes(-1)).TotalSeconds) > 6000)
-            {
-                string urlForApi_ticket = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={0}&type=jsapi";
-                strToken = GetNewToken();
-                urlForApi_ticket = string.Format(urlForApi_ticket, strToken);
-                string strApi_ticket = CommonTool.Common.GetHtmlFromUrl(urlForApi_ticket);
-                Dictionary<string, string> dic = CommonTool.JsonHelper.GetParms2(strApi_ticket);
-                if (dic.Keys.Contains("ticket"))
-                {
-                    //获取新的ticket并赋值到TicketModal中
-                    strRtn = dic["ticket"].ToString();
-                    TicketModal.ticket = strRtn;
-                    TicketModal.lastTime = DateTime.Now;
-                }
-            }
-            else
-            {
-                strRtn = TicketModal.ticket;
-            }
-
-            return strRtn;
-        }
+        }   
 
         public static Dictionary<string, string> GetUserInfo(string code)
         {
             Dictionary<string, string> dicRtn = new Dictionary<string, string>();
 
-            string strUrl = "https://api.weixin.qq.com/sns/userinfo?access_token={0}&openid={1}&lang=zh-CN";
+            string strUrl = "https://api.weixin.qq.com/sns/userinfo?access_token={0}&openid={1}&lang=zh_CN";
             Dictionary<string, string> dic_oauth_info = GetOAuthInfo(code);
             CommonTool.WriteLog.Write("dic_oauth_info ===== " + dic_oauth_info);
             if (dic_oauth_info.Count > 0 && dic_oauth_info.Keys.Contains("openid") && dic_oauth_info.Keys.Contains("access_token"))
