@@ -66,9 +66,9 @@ namespace BLL
                                     unionid, 
                                     state
                                 )
-                                values ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}',, '{7}', 0)";
+                                values ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', 0)";
             str = string.Format(str, d.openid, d.nickname, d.sex, d.province, d.city, d.country, d.headimgurl, d.unionid);
-
+            CommonTool.WriteLog.Write("insert str ===== " + str);
             int flag = DBHelper.SqlHelper.ExecuteSql(str);
 
             return flag > 0 ? true : false;
