@@ -16,7 +16,7 @@ namespace culture_server.Controllers
 {
     public class UserController : ApiController
     {
-        #region 管理员登录授权
+        #region 微信登录授权
         /// <summary>  
         /// 管理员登录授权  
         /// </summary>  
@@ -63,8 +63,8 @@ namespace culture_server.Controllers
                 }
                 else
                 {
-                    _user.id = System.Guid.NewGuid().ToString();
-                    new BLL.handleUser().insert(wxUser);
+                    _user.id = System.Guid.NewGuid().ToString();                  
+                    new BLL.handleUser().insert(_user);
                 }
 
                 FormsAuthenticationTicket token = new FormsAuthenticationTicket(0, wxUser.openid, DateTime.Now,
@@ -74,7 +74,7 @@ namespace culture_server.Controllers
                 var Token = FormsAuthentication.Encrypt(token);
                 //将身份信息保存在数据库中，验证当前请求是否是有效请求
                 string str_token = @"insert into dbo.c_token (userId, token, expireDate) values ('{0}', '{1}', '{2}')";
-                str_token = string.Format(str_token, wxUser.openid, Token, DateTime.Now.AddHours(3));
+                str_token = string.Format(str_token, _user.id, Token, DateTime.Now.AddHours(3));
                 DBHelper.SqlHelper.ExecuteSql(str_token);
 
                 data = new
@@ -138,7 +138,7 @@ namespace culture_server.Controllers
                 data = new
                 {
                     success = false,
-                    backMsg = "安全退出失败，请重试！"
+                    backMsg = "退出失败，请重试！"
                 };
             }
 
@@ -230,7 +230,6 @@ namespace culture_server.Controllers
             };
         }
         #endregion
-
 
         #region 删除用户
         /// <summary>  
