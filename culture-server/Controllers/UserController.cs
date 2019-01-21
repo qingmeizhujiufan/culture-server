@@ -1,4 +1,5 @@
-﻿using culture_server.Core;
+﻿using CommonTool;
+using culture_server.Core;
 using culture_server.Models;
 using culture_server.Util;
 using System;
@@ -31,41 +32,10 @@ namespace culture_server.Controllers
                     Content = new StringContent("", System.Text.Encoding.UTF8, "application/json")
                 };
             }
-            string email = Convert.ToString(user.email);
-            string userPwd = Convert.ToString(user.userPwd);
-            string strSql = @"select    id, email, avatar, sex, userName, nickName, telephone
-                                        from dbo.c_user
-                                        where email = '{0}' and userPwd = '{1}'";
-            strSql = string.Format(strSql, email, userPwd);
-            DataTable dt_user = DBHelper.SqlHelper.GetDataTable(strSql);
+            string code = Convert.ToString(user.code);
+            WxUser wxUser = CommonTool.WXOperate.GetWxUser(code);
             var data = new object { };
-            if (dt_user.Rows.Count == 1)
-            {
-                FormsAuthenticationTicket token = new FormsAuthenticationTicket(0, email, DateTime.Now,
-                            DateTime.Now.AddHours(12), true, string.Format("{0}&{1}", email, userPwd),
-                            FormsAuthentication.FormsCookiePath);
-                //返回登录结果、用户信息、用户验证票据信息
-                var Token = FormsAuthentication.Encrypt(token);
-                //将身份信息保存在数据库中，验证当前请求是否是有效请求
-                string str_token = @"insert into dbo.c_token (userId, token, expireDate) values ('{0}', '{1}', '{2}')";
-                str_token = string.Format(str_token, dt_user.Rows[0]["id"], Token, DateTime.Now.AddHours(12));
-                DBHelper.SqlHelper.ExecuteSql(str_token);
-
-                data = new
-                {
-                    success = true,
-                    token = Token,
-                    userId = dt_user.Rows[0]["id"],
-                    email = dt_user.Rows[0]["email"],
-                    avatar = dt_user.Rows[0]["avatar"],
-                    sex = dt_user.Rows[0]["sex"],
-                    userName = dt_user.Rows[0]["userName"],
-                    nickName = dt_user.Rows[0]["nickName"],
-                    telephone = dt_user.Rows[0]["telephone"],
-                    expireDate = DateTime.Now.AddHours(12).ToString()
-                };
-            }
-            else
+            if (string.IsNullOrEmpty(wxUser.openid))
             {
                 data = new
                 {
@@ -73,8 +43,54 @@ namespace culture_server.Controllers
                     backMsg = "登录失败，请重试！"
                 };
             }
+            else
+            {
+                DataTable dt_user = new BLL.handleUser().findUserByOpenId(wxUser.openid);
+                user _user = new user();
+                _user.openid = wxUser.openid;
+                _user.nickname = wxUser.nickname;
+                _user.sex = wxUser.sex;
+                _user.province = wxUser.province;
+                _user.city = wxUser.city;
+                _user.country = wxUser.country;
+                _user.headimgurl = wxUser.headimgurl;
+                _user.unionid = wxUser.unionid;
+
+                if (dt_user.Rows.Count == 1)
+                {
+                    _user.id = dt_user.Rows[0]["id"].ToString();
+                    new BLL.handleUser().update(_user);
+                }
+                else
+                {
+                    _user.id = System.Guid.NewGuid().ToString();
+                    new BLL.handleUser().insert(wxUser);
+                }
+
+                FormsAuthenticationTicket token = new FormsAuthenticationTicket(0, wxUser.openid, DateTime.Now,
+                            DateTime.Now.AddHours(3), true, string.Format("{0}", wxUser.openid),
+                            FormsAuthentication.FormsCookiePath);
+                //返回登录结果、用户信息、用户验证票据信息
+                var Token = FormsAuthentication.Encrypt(token);
+                //将身份信息保存在数据库中，验证当前请求是否是有效请求
+                string str_token = @"insert into dbo.c_token (userId, token, expireDate) values ('{0}', '{1}', '{2}')";
+                str_token = string.Format(str_token, wxUser.openid, Token, DateTime.Now.AddHours(3));
+                DBHelper.SqlHelper.ExecuteSql(str_token);
+
+                data = new
+                {
+                    success = true,
+                    token = Token,
+                    backData = new
+                    {
+                        userInfo = _user
+                    }
+                };
+            }
+
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             string json = serializer.Serialize(data);
+
             return new HttpResponseMessage
             {
                 Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
@@ -215,58 +231,6 @@ namespace culture_server.Controllers
         }
         #endregion
 
-        #region 更新或者新增用户信息
-        /// <summary>  
-        /// 更新或者新增用户信息 
-        /// </summary>  
-        /// <param name="id">id</param>  
-        /// <returns></returns>
-        [AcceptVerbs("OPTIONS", "POST")]
-        public HttpResponseMessage save(dynamic d)
-        {
-            Object data;
-
-            try
-            {
-                BLL.handleUser user = new BLL.handleUser();
-                bool flag = false;
-                flag = user.saveAP(d);
-
-                if (flag)
-                {
-                    data = new
-                    {
-                        success = true
-                    };
-                }
-                else
-                {
-                    data = new
-                    {
-                        success = false,
-                        backMsg = "保存信息失败"
-
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                data = new
-                {
-                    success = false,
-                    backMsg = "服务异常"
-
-                };
-            }
-
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            string json = serializer.Serialize(data);
-            return new HttpResponseMessage
-            {
-                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
-            };
-        }
-        #endregion
 
         #region 删除用户
         /// <summary>  
@@ -423,7 +387,7 @@ namespace culture_server.Controllers
                 Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
             };
         }
-        #endregion     
+        #endregion
 
         #region 私有方法集
         //返回user对象
@@ -431,11 +395,14 @@ namespace culture_server.Controllers
         {
             user n = new user();
             n.id = d["id"].ToString();
-            n.avatar = util.generateImage(d["avatar"].ToString());
+            n.openid = d["openid"].ToString();
+            n.nickname = d["nickname"].ToString();
             n.sex = d["sex"].ToString();
-            n.userName = d["userName"].ToString();
-            n.nickName = d["nickName"].ToString();
-            n.telephone = d["telephone"].ToString();
+            n.province = d["province"].ToString();
+            n.city = d["city"].ToString();
+            n.country = d["country"].ToString();
+            n.headimgurl = d["headimgurl"].ToString();
+            n.unionid = d["unionid"].ToString();
             n.state = Convert.ToInt32(d["state"].ToString());
             n.isDelete = Convert.ToInt32(d["isDelete"].ToString());
             n.create_time = d["create_time"].ToString();
