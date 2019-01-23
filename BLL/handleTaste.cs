@@ -38,8 +38,8 @@ namespace BLL
                        a.updator,
                        CONVERT(varchar(19), a.update_time, 120) as update_time,
                        a.creator,
-                       u.avatar,
-                       u.nickName as creatorName,
+                       u.headimgurl,
+                       u.nickname as creatorName,
                        CONVERT(varchar(19), a.create_time, 120) as create_time,
                        ROW_NUMBER() OVER (ORDER BY a.create_time desc) AS RowNumber
                 from dbo.c_taste a
@@ -47,7 +47,7 @@ namespace BLL
                 on a.creator = u.id
                 where a.state=1
         )
-        select id, tasteCover, tasteTitle, tasteBrief, isLike, likeNum, commentNum, state, updator, update_time,creator, avatar, creatorName, create_time from TastePage
+        select id, tasteCover, tasteTitle, tasteBrief, isLike, likeNum, commentNum, state, updator, update_time,creator, headimgurl, creatorName, create_time from TastePage
         where RowNumber > @Start AND RowNumber <= @End
         ORDER BY create_time desc";
             str = string.Format(str, userId, (pageNumber - 1) * pageSize, pageNumber * pageSize);
@@ -88,8 +88,8 @@ namespace BLL
 	                               a.updator,
 	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
 	                               a.creator,
-	                               u.avatar,
-	                               u.nickName as creatorName,
+	                               u.headimgurl,
+                                   u.nickname as creatorName,
 	                               CONVERT(varchar(19), a.create_time, 120) as create_time
                             from dbo.c_taste a
                             left join dbo.c_user u
@@ -120,8 +120,8 @@ namespace BLL
 	                               a.updator,
 	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
 	                               a.creator,
-                                   u.avatar,
-	                               u.nickName as creatorName,
+                                   u.headimgurl,
+                                   u.nickname as creatorName,
 	                               CONVERT(varchar(19), a.create_time, 120) as create_time
                             from dbo.c_taste a
                             left join dbo.c_user u
@@ -252,8 +252,8 @@ namespace BLL
 	                                   a.updator,
 	                                   CONVERT(varchar(19), a.update_time, 120) as update_time,
 	                                   a.creator,
-                                       u.avatar,
-	                                   u.nickName as creatorName,
+                                       u.headimgurl,
+                                       u.nickname as creatorName,
 	                                   CONVERT(varchar(19), a.create_time, 120) as create_time
                                 from dbo.c_taste a
                                 left join dbo.c_user u
@@ -278,8 +278,8 @@ namespace BLL
 	                                   a.updator,
 	                                   CONVERT(varchar(19), a.update_time, 120) as update_time,
 	                                   a.creator,
-                                       u.avatar,
-	                                   u.nickName as creatorName,
+                                       u.headimgurl,
+                                       u.nickname as creatorName,
 	                                   CONVERT(varchar(19), a.create_time, 120) as create_time
                                 from dbo.c_taste a
                                 left join dbo.c_user u
@@ -312,8 +312,8 @@ namespace BLL
 	                               a.updator,
 	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
 	                               a.creator,
-	                               u.avatar,
-	                               u.nickName as creatorName,
+	                               u.headimgurl,
+                                   u.nickname as creatorName,
 	                               CONVERT(varchar(19), a.create_time, 120) as create_time
                             from dbo.c_taste a
                             left join dbo.c_user u
@@ -345,8 +345,8 @@ namespace BLL
 	                               a.updator,
 	                               CONVERT(varchar(19), a.update_time, 120) as update_time,
 	                               a.creator,
-	                               u.avatar,
-	                               u.nickName as creatorName,
+	                               u.headimgurl,
+                                   u.nickname as creatorName,
 	                               CONVERT(varchar(19), a.create_time, 120) as create_time
                             from dbo.c_taste a
                             left join dbo.c_user u
@@ -376,8 +376,8 @@ namespace BLL
 	                               c.pId,
 	                               c.tasteId,
                                    c.userId,
-                                   u.avatar,
-                                   u.userName,
+                                   u.headimgurl,
+                                   u.nickname,
                                    c.comment,
 	                               CONVERT(varchar(19), c.create_time, 120) as create_time
                             from dbo.c_taste_comment c
@@ -398,8 +398,8 @@ namespace BLL
 	                               c.pId,
 	                               c.tasteId,
                                    c.userId,
-                                   u.avatar,
-                                   u.userName,
+                                   u.headimgurl,
+                                   u.nickname,
                                    c.comment,
 	                               CONVERT(varchar(19), c.create_time, 120) as create_time
                             from dbo.c_taste_comment c

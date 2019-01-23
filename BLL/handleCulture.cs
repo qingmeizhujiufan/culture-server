@@ -337,8 +337,8 @@ namespace BLL
 	                               c.pId,
 	                               c.cultureId,
                                    c.userId,
-                                   u.avatar,
-                                   u.userName,
+                                   u.headimgurl,
+                                   u.nickname,
                                    c.comment,
 	                               CONVERT(varchar(19), c.create_time, 120) as create_time
                             from dbo.c_culture_comment c
@@ -370,8 +370,8 @@ namespace BLL
 	                               c.pId,
 	                               c.cultureId,
                                    c.userId,
-                                   u.avatar,
-                                   u.userName,
+                                   u.headimgurl,
+                                   u.nickname,
                                    c.comment,
 	                               CONVERT(varchar(19), c.create_time, 120) as create_time
                             from dbo.c_culture_comment c

@@ -12,11 +12,14 @@ namespace BLL
         public DataTable queryList()
         {
             string str = @"select   id,
-                                    avatar,
+                                    openid,
+                                    nickname,
                                     sex,
-                                    userName,
-                                    nickName,
-                                    telephone,
+                                    province,
+                                    city,
+                                    country,
+                                    headimgurl,
+                                    unionid,
                                     ISNULL(state, 0) as state,
                                     ISNULL(isDelete, 0) as isDelete,
                                     CONVERT(varchar(19), create_time, 120) as create_time
