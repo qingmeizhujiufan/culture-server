@@ -15,7 +15,7 @@ namespace culture_server.Models
         public int likeNum { get; set; }
         public int commentNum { get; set; }
         public int state { get; set; }
-        public image avatar { get; set; }
+        public string headimgurl { get; set; }
         public string updator { get; set; }
         public string update_time { get; set; }
         public string creator { get; set; }
