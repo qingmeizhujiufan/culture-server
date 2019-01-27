@@ -819,8 +819,8 @@ namespace culture_server.Controllers
             t.pId = d["pId"].ToString();
             t.artId = d["artId"].ToString();
             t.userId = d["userId"].ToString();
-            t.avatar = util.generateImage(d["avatar"].ToString());
-            t.userName = d["userName"].ToString();
+            t.headimgurl = d["headimgurl"].ToString();
+            t.nickname = d["nickname"].ToString();
             t.comment = d["comment"].ToString();
             t.create_time = d["create_time"].ToString();
 
