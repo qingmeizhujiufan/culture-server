@@ -281,7 +281,7 @@ namespace BLL
                                     updatorName,
                                     CONVERT(varchar(19), n.update_time, 120) as update_time,
                                     creator,
-                                    a.userName as creatorName,
+                                    a.nickname as creatorName,
                                     a.typeName,
                                     CONVERT(varchar(19), n.create_time, 120) as create_time
                                 from dbo.c_art n
@@ -348,8 +348,8 @@ namespace BLL
 	                               c.pId,
 	                               c.artId,
                                    c.userId,
-                                   u.avatar,
-                                   u.userName,
+                                   u.headimgurl,
+                                   u.nickname,
                                    c.comment,
 	                               CONVERT(varchar(19), c.create_time, 120) as create_time
                             from dbo.c_art_comment c
@@ -381,8 +381,8 @@ namespace BLL
 	                               c.pId,
 	                               c.artId,
                                    c.userId,
-                                   u.avatar,
-                                   u.userName,
+                                   u.headimgurl,
+                                   u.nickname,
                                    c.comment,
 	                               CONVERT(varchar(19), c.create_time, 120) as create_time
                             from dbo.c_art_comment c
