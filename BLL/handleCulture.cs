@@ -214,7 +214,7 @@ namespace BLL
         //收藏文化
         public bool collect(dynamic d)
         {
-            string str = @"declare @id uniqueidentifier, @userId uniqueidentifier, @isExist int
+            string str = @"declare @cultureId uniqueidentifier, @userId uniqueidentifier, @isExist int
 
                                 set @cultureId = '{0}';
 

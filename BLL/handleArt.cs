@@ -221,7 +221,7 @@ namespace BLL
         //收藏艺术品
         public bool collect(dynamic d)
         {
-            string str = @"declare @id uniqueidentifier, @userId uniqueidentifier, @isExist int
+            string str = @"declare @artId uniqueidentifier, @userId uniqueidentifier, @isExist int
 
                                 set @artId = '{0}';
 
