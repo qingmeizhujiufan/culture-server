@@ -172,9 +172,10 @@ namespace BLL
         //删除用户收藏的文化
         public bool delete2(dynamic d)
         {
-            string id = d.id;
-            string str = @"delete dbo.c_culture_like where id='{0}'";
-            str = string.Format(str, id);
+            string cultureId = d.cultureId;
+            string userId = d.userId;
+            string str = @"delete dbo.c_culture_like where cultureId='{0}' and userId='{1}'";
+            str = string.Format(str, cultureId, userId);
             int flag = DBHelper.SqlHelper.ExecuteSql(str);
 
             return flag > 0 ? true : false;
@@ -215,21 +216,21 @@ namespace BLL
         {
             string str = @"declare @id uniqueidentifier, @userId uniqueidentifier, @isExist int
 
-                                set @id = '{0}';
+                                set @cultureId = '{0}';
 
                                 set @userId = '{1}';
 
-                                set @isExist = (select COUNT(id) from dbo.c_culture_like where cultureId = @id and userId = @userId);
+                                set @isExist = (select COUNT(id) from dbo.c_culture_like where cultureId = @cultureId and userId = @userId);
 
                                 if @isExist > 0
 
-                                     delete from dbo.c_culture_like where cultureId = @id and userId = @userId
+                                     delete from dbo.c_culture_like where cultureId = @cultureId and userId = @userId
 
                                 else
 
                                      begin
 
-                                          insert into dbo.c_culture_like (cultureId, userId) values(@id, @userId)
+                                          insert into dbo.c_culture_like (cultureId, userId) values(@cultureId, @userId)
 
                                      end";
             str = string.Format(str, d.cultureId, d.userId);
@@ -291,7 +292,7 @@ namespace BLL
         //获取用户收藏文化
         public DataTable queryUserCollectCulture(string userId)
         {
-            string str = @"select   l.id,
+            string str = @"select   n.id,
                                     n.cityId,
                                     c.cityName,
                                     cultureType,

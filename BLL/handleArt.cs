@@ -179,9 +179,10 @@ namespace BLL
         //删除用户收藏的艺术品
         public bool delete2(dynamic d)
         {
-            string id = d.id;
-            string str = @"delete dbo.c_art_like where id='{0}'";
-            str = string.Format(str, id);
+            string artId = d.artId;
+            string userId = d.userId;
+            string str = @"delete dbo.c_art_like where artId='{0}' and userId='{1}'";
+            str = string.Format(str, artId, userId);
             int flag = DBHelper.SqlHelper.ExecuteSql(str);
 
             return flag > 0 ? true : false;
@@ -222,21 +223,21 @@ namespace BLL
         {
             string str = @"declare @id uniqueidentifier, @userId uniqueidentifier, @isExist int
 
-                                set @id = '{0}';
+                                set @artId = '{0}';
 
                                 set @userId = '{1}';
 
-                                set @isExist = (select COUNT(id) from dbo.c_art_like where artId = @id and userId = @userId);
+                                set @isExist = (select COUNT(id) from dbo.c_art_like where artId = @artId and userId = @userId);
 
                                 if @isExist > 0
 
-                                     delete from dbo.c_art_like where artId = @id and userId = @userId
+                                     delete from dbo.c_art_like where artId = @artId and userId = @userId
 
                                 else
 
                                      begin
 
-                                          insert into dbo.c_art_like (artId, userId) values(@id, @userId)
+                                          insert into dbo.c_art_like (artId, userId) values(@artId, @userId)
 
                                      end";
             str = string.Format(str, d.artId, d.userId);
@@ -300,7 +301,7 @@ namespace BLL
         //获取用户收藏艺术品
         public DataTable queryUserCollectArt(string userId)
         {
-            string str = @"select   l.id,
+            string str = @"select   n.id,
                                     n.cityId,
                                     c.cityName,
                                     artType,
